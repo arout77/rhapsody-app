@@ -1,0 +1,292 @@
+<?php
+
+// bootstrap.php
+use App\Providers\EventServiceProvider;
+use App\Services\CareerService;
+use App\Services\NotificationService;
+use Doctrine\DBAL\DriverManager;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\ORMSetup;
+use Predis\Client as RedisClient;
+use Rhapsody\Core\Cache;
+use Rhapsody\Core\Cache\CacheInterface;
+use Rhapsody\Core\Cache\FileCacheDriver;
+use Rhapsody\Core\Cache\RedisCacheDriver;
+use Rhapsody\Core\Commands\CacheClearCommand;
+use Rhapsody\Core\Commands\CacheWarmCommand;
+use Rhapsody\Core\Commands\CheckVersionCommand;
+use Rhapsody\Core\Commands\EnvSyncCommand;
+use Rhapsody\Core\Commands\MakeControllerCommand;
+use Rhapsody\Core\Commands\MakeEventCommand;
+use Rhapsody\Core\Commands\MakeListenerCommand;
+use Rhapsody\Core\Commands\MakeMiddlewareCommand;
+use Rhapsody\Core\Commands\MakeMigrationCommand;
+use Rhapsody\Core\Commands\MakeModelCommand;
+use Rhapsody\Core\Commands\MigrateCommand;
+use Rhapsody\Core\Commands\RouteCacheCommand;
+use Rhapsody\Core\Commands\RouteClearCommand;
+use Rhapsody\Core\Commands\UpdateCommand;
+use Rhapsody\Core\Container;
+use Rhapsody\Core\Events\EventDispatcher;
+use Rhapsody\Core\Mailer;
+use Rhapsody\Core\QueryLogger;
+use Rhapsody\Core\Request;
+use Rhapsody\Core\Router;
+use Rhapsody\Core\Session;
+use Rhapsody\Core\Validator;
+use Symfony\Component\Cache\Adapter\ArrayAdapter;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
+use Twig\Environment;
+use Twig\Loader\FilesystemLoader;
+
+// 1. Establish the explicit runtime application path base directory context
+$basePath = defined('RHAPSODY_APP_ROOT')  ?RHAPSODY_APP_ROOT : dirname(__FILE__);
+
+// 2. Create a new Service Container instance.
+$container = new Container();
+$config    = require $basePath . '/config/config.php';
+
+$router = $container->get(Rhapsody\Core\Routing\Router::class);
+
+// 1. Load framework-defined routes first (so they are always available)
+if (file_exists(__DIR__ . '/vendor/arout77/rhapsody-core/src/routes.php')) {
+    require __DIR__ . '/vendor/arout77/rhapsody-core/src/routes.php';
+}
+
+// 2. Load downstream application routes (allowing the app to override core routes)
+require __DIR__ . '/routes/web.php';
+
+// --- EVENT DISPATCHER BINDING ---
+$container->bind(EventDispatcher::class, function (Container $c) {
+    $eventServiceProvider = new EventServiceProvider();
+    return new EventDispatcher($c, $eventServiceProvider->getListeners());
+});
+
+// --- QUERY LOGGER BINDING (SINGLETON) ---
+$container->bind(QueryLogger::class, function () {
+    return new QueryLogger();
+});
+
+// --- DOCTRINE ENTITY MANAGER BINDING ---
+$container->bind(EntityManager::class, function ($container) use ($config, $basePath) {
+    $paths     = [$basePath . '/app/Entities'];
+    $isDevMode = ($config['app_env'] ?? 'production') === 'development';
+
+    // Retrieve the same logger instance (singleton)
+    $sqlLogger = $container->resolve(QueryLogger::class);
+
+    $cache          = $isDevMode ? new ArrayAdapter() : new FilesystemAdapter('', 0, $basePath . '/storage/cache/doctrine');
+    $doctrineConfig = ORMSetup::createAttributeMetadataConfiguration($paths, $isDevMode, null, $cache);
+
+    $doctrineConfig->setSQLLogger($sqlLogger);
+
+    $dbParams = [
+        'driver'   => 'pdo_mysql',
+        'host'     => $_ENV['DB_HOST'],
+        'user'     => $_ENV['DB_USER'],
+        'password' => $_ENV['DB_PASS'],
+        'dbname'   => $_ENV['DB_NAME'],
+        'charset'  => 'utf8mb4',
+    ];
+
+    $connection = DriverManager::getConnection($dbParams, $doctrineConfig);
+    return new EntityManager($connection, $doctrineConfig);
+});
+
+// --- CACHE SYSTEM BINDING ---
+$container->bind(CacheInterface::class, function () use ($config, $basePath) {
+    if ($config['cache']['driver'] === 'redis') {
+        $redisClient = new RedisClient([
+            'scheme'   => 'tcp',
+            'host'     => $config['redis']['host'],
+            'port'     => $config['redis']['port'],
+            'password' => $config['redis']['password'] ?: null,
+        ]);
+        return new RedisCacheDriver($redisClient);
+    }
+    // Inject the decoupled runtime directory path into your File Cache Driver
+    return new FileCacheDriver($basePath . '/storage/cache/app');
+});
+
+$container->bind(Cache::class, function (Container $c) {
+    return new Cache($c->resolve(CacheInterface::class));
+});
+
+// Make Cache statically accessible (same pattern as Database::getInstance())
+Cache::setInstance($container->resolve(Cache::class));
+
+// --- TWIG BINDING ---
+$container->bind(Environment::class, function (Container $c) use ($config, $basePath) {
+    $activeTheme = $config['theme'] ?? 'default';
+    $paths       = [];
+
+    // The active theme path is always the first priority.
+    $activeThemePath = $basePath . '/views/themes/' . $activeTheme;
+    if (is_dir($activeThemePath)) {
+        $paths[] = $activeThemePath;
+    }
+
+    // If the active theme is not the default, add the default theme as a fallback.
+    $defaultThemePath = $basePath . '/views/themes/default';
+    if ($activeTheme !== 'default' && is_dir($defaultThemePath)) {
+        $paths[] = $defaultThemePath;
+    }
+
+    // If for some reason no paths were added (e.g., bad config), fallback to default.
+    if (empty($paths) && is_dir($defaultThemePath)) {
+        $paths[] = $defaultThemePath;
+    }
+
+    if (empty($paths)) {
+        throw new \Exception("No valid theme directory found. Please check your configuration.");
+    }
+
+    $loader = new FilesystemLoader($paths);
+    // App views take priority
+    $loader->addPath(__DIR__ . '/views');
+
+    // Register core views under a specific namespace
+    $coreViewsPath = __DIR__ . '/vendor/arout/rhapsody-core/views/themes/default';
+    $loader->addPath($coreViewsPath, 'core');
+
+    // --- TWIG CACHING ENABLED ---
+    $isDevelopment = ($config['app_env'] === 'development');
+    $twigOptions   = [
+        'debug'       => $isDevelopment,
+        'cache'       => $basePath . '/storage/cache/twig',
+        'auto_reload' => $isDevelopment,
+    ];
+
+    $twig = new Environment($loader, $twigOptions);
+    $twig->addGlobal('app_url', $_ENV['APP_URL'] ?? '');
+    $twig->addGlobal('app_env', $_ENV['APP_ENV'] ?? 'production');
+
+    // Auth lazy object
+    $auth = new class($c)
+    {
+        public function __construct(private Container $container)
+        {}
+
+        public function __get(string $name): mixed
+        {
+            return match ($name) {
+                'check' => Session::has('user_id'),
+                'user'  => Session::has('user_id')
+                    ? $this->container->resolve(\App\Models\User::class)->getUserById(Session::get('user_id'))
+                    : null,
+                default => null,
+            };
+        }
+
+        public function __isset(string $name): bool
+        {
+            return in_array($name, ['check', 'user']);
+        }
+    };
+    $twig->addGlobal('auth', $auth);
+    $twig->addGlobal('base_url', $_ENV['APP_URL'] . $_ENV['APP_BASE_URL']);
+
+    // Lazy‑loaded flash messages
+    $flash = new class {
+        public function __get($name)
+        {
+            return Session::getFlash($name);
+        }
+        public function __isset($name)
+        {
+            return Session::hasFlash($name);
+        }
+    };;
+    $twig->addGlobal('flash', $flash);
+
+    $cache = $c->resolve(Cache::class);
+    $twig->addGlobal('update_available', $cache->get('update_available'));
+
+    $twig->addFunction(new \Twig\TwigFunction('csrf_field', function () {
+        $token = Session::csrfToken();
+        return new \Twig\Markup('<input type="hidden" name="_token" value="' . $token . '">', 'UTF-8');
+    }));
+
+    return $twig;
+});
+
+// --- OTHER CORE SERVICES ---
+$container->bind(\Rhapsody\Core\Contracts\AuthenticatableInterface::class, \App\Models\User::class);
+$container->bind(Mailer::class);
+$container->bind(Validator::class, function (Container $c) {
+    return new Validator($c->resolve(EntityManager::class));
+});
+$container->bind(Request::class, fn() => new Request());
+$container->bind(NotificationService::class, function (Container $c) {
+    return new NotificationService($c->resolve(Cache::class));
+});
+
+// --- COMMAND BINDINGS (Refactored to inject context-aware path mappings) ---
+$container->bind(UpdateCommand::class, function () use ($config) {
+    return new UpdateCommand($config);
+});
+
+$container->bind(CheckVersionCommand::class, function ($c) use ($config) {
+    return new CheckVersionCommand(
+        $config,
+        $c->resolve(Mailer::class),
+        $c->resolve(Cache::class)
+    );
+});
+
+$container->bind(CacheClearCommand::class, function ($c) use ($basePath) {
+    return new CacheClearCommand($c->resolve(Cache::class), $basePath);
+});
+
+$container->bind(CacheWarmCommand::class, function () use ($basePath) {
+    return new CacheWarmCommand($basePath);
+});
+
+$container->bind(EnvSyncCommand::class, function () use ($basePath) {
+    return new EnvSyncCommand($basePath);
+});
+
+$container->bind(MakeControllerCommand::class, function () use ($basePath) {
+    return new MakeControllerCommand($basePath);
+});
+
+$container->bind(MakeEventCommand::class, function () use ($basePath) {
+    return new MakeEventCommand($basePath);
+});
+
+$container->bind(MakeListenerCommand::class, function () use ($basePath) {
+    return new MakeListenerCommand($basePath);
+});
+
+$container->bind(MakeMiddlewareCommand::class, function () use ($basePath) {
+    return new MakeMiddlewareCommand($basePath);
+});
+
+$container->bind(MakeMigrationCommand::class, function () use ($basePath) {
+    return new MakeMigrationCommand($basePath);
+});
+
+$container->bind(MakeModelCommand::class, function () use ($basePath) {
+    return new MakeModelCommand($basePath);
+});
+
+$container->bind(MigrateCommand::class, function () use ($basePath) {
+    return new MigrateCommand($basePath);
+});
+
+$container->bind(RouteCacheCommand::class, function () use ($basePath) {
+    return new RouteCacheCommand($basePath);
+});
+
+$container->bind(RouteClearCommand::class, function () use ($basePath) {
+    return new RouteClearCommand($basePath);
+});
+
+$middlewareConfig = $config['middleware'] ?? ['map' => [], 'global' => []];
+Router::setMiddlewareConfig(
+    $middlewareConfig['map'],
+    $middlewareConfig['global']
+);
+
+// 3. Return the fully configured container.
+return $container;
