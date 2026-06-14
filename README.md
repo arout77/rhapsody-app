@@ -26,14 +26,6 @@ The framework's clean, decoupled architecture (thanks to features like the Event
 
 In your terminal:
 
-git clone https://github.com/arout77/Rhapsody-Framework your-site-name
+<span style="color:green">composer create-project arout/rhapsody-app my-awesome-app</span>
 
-1. cd rhapsody
-
-composer install
-
-cd your-site-name
-
-cp .env.example .env
-
-#### Enter your database credentials in the newly created file, and you're done!
+#### Enter your database credentials and website settings in the .env file, and you're done!
