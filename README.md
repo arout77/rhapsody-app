@@ -26,6 +26,6 @@ The framework's clean, decoupled architecture (thanks to features like the Event
 
 In your terminal:
 
-<span style="color:green">composer create-project arout/rhapsody-app my-awesome-app</span>
+#### <span style="color:green">composer create-project arout/rhapsody-app my-awesome-app</span>
 
-#### Enter your database credentials and website settings in the .env file, and you're done!
+After composer is finished running, open the .env file in your newly created project's root directory. In it, enter your database credentials, and your website URL (and sub-directory if applicable). That's it, installation is complete! Now you can open your URL in the web browser and you should see the welcome page!
