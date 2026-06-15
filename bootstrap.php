@@ -46,6 +46,11 @@ use Twig\Loader\FilesystemLoader;
 // 1. Establish the explicit runtime application path base directory context Safely
 $basePath = defined('RHAPSODY_APP_ROOT')  ?RHAPSODY_APP_ROOT : dirname(__FILE__);
 
+if (file_exists(__DIR__ . '/.env')) {
+    $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+    $dotenv->load();
+}
+
 // 2. Create a new Service Container instance and assign it to global scope
 global $container;
 $container  = new Container();
@@ -57,6 +62,9 @@ if (! file_exists($configPath)) {
 
 // Expecting config.php to return its configuration array
 $config = require $configPath;
+$container->bind('config', function () use ($config) {
+    return $config;
+});
 
 // =========================================================================
 // STEP 2: SERVICE REGISTRATION (Register bindings into container memory)
@@ -219,6 +227,7 @@ $container->bind(Environment::class, function (Container $c) use ($config, $base
             return Session::hasFlash($name);
         }
     };;;
+
     $twig->addGlobal('flash', $flash);
 
     $cache = $c->resolve(Cache::class);
@@ -234,7 +243,9 @@ $container->bind(Environment::class, function (Container $c) use ($config, $base
 
 // --- OTHER CORE SERVICES ---
 $container->bind(\Rhapsody\Core\Contracts\AuthenticatableInterface::class, \App\Models\User::class);
-$container->bind(Mailer::class);
+$container->bind(Rhapsody\Core\Mailer::class, function ($c) use ($config) {
+    return new \Rhapsody\Core\Mailer($config['mailer'] ?? []);
+});
 $container->bind(Validator::class, function (Container $c) {
     return new Validator($c->resolve(EntityManager::class));
 });
@@ -292,8 +303,9 @@ $container->bind(MakeModelCommand::class, function () use ($basePath) {
     return new MakeModelCommand($basePath);
 });
 
-$container->bind(MigrateCommand::class, function () use ($basePath) {
-    return new MigrateCommand($basePath);
+// Fix: Resolved the Database dependency singleton out of the container instance cleanly
+$container->bind(MigrateCommand::class, function ($c) use ($basePath) {
+    return new MigrateCommand($basePath, $c->resolve(\Rhapsody\Core\Database::class));
 });
 
 $container->bind(RouteCacheCommand::class, function () use ($basePath) {
