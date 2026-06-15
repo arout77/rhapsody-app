@@ -1,0 +1,16 @@
+# --- Enable the URL rewriting engine
+RewriteEngine On
+
+# --- Optional: If your site is in a subdirectory, uncomment and set it here
+# RewriteBase /my-awesome-app/
+
+# --- Redirect Trailing Slashes If Not a Folder (Good for Router consistency)
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)/$ /$1 [L,R=301]
+
+# --- If the requested file or directory doesn't physically exist on the server...
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# --- ...then reroute the request to be handled by index.php
+RewriteRule ^ index.php [L]
