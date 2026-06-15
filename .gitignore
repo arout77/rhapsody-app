@@ -1,1 +1,3 @@
 /.phpintel
+/storage/cache/twig
+/storage/logs
