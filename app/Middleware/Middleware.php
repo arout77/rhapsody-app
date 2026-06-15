@@ -1,8 +1,7 @@
 <?php
-
 namespace App\Middleware;
 
-use Core\Request;
+use Rhapsody\Core\Request;
 
 /**
  * The base class for all middleware.
@@ -16,5 +15,5 @@ abstract class Middleware
      * @param Request $request
      * @return void
      */
-    abstract public function handle( Request $request ): void;
+    abstract public function handle(Request $request): void;
 }

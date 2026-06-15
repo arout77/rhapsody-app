@@ -1,11 +1,11 @@
 <?php
 
-use App\Controllers\AuthController;
-use App\Controllers\DocsController;
 use App\Controllers\PageController;
 use App\Controllers\UserController;
 use App\Middleware\AuthMiddleware;
 use App\Middleware\GuestMiddleware;
+use Rhapsody\Core\Controllers\AuthController;
+use Rhapsody\Core\Controllers\DocsController;
 use Rhapsody\Core\Routing\Router;
 
 // Define your application routes using the static Router methods.

@@ -1,8 +1,8 @@
 <?php
 namespace App\Middleware;
 
-use Core\Request;
-use Core\Session;
+use Rhapsody\Core\Request;
+use Rhapsody\Core\Session;
 
 class VerifyCsrfTokenMiddleware extends Middleware
 {

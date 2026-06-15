@@ -39,10 +39,15 @@ use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 
-// 1. Establish the explicit runtime application path base directory context
+// =========================================================================
+// STEP 1: INITIAL ENVIRONMENT & SYSTEM LAYOUT CONFIGURATION
+// =========================================================================
+
+// 1. Establish the explicit runtime application path base directory context Safely
 $basePath = defined('RHAPSODY_APP_ROOT')  ?RHAPSODY_APP_ROOT : dirname(__FILE__);
 
-// 2. Create a new Service Container instance.
+// 2. Create a new Service Container instance and assign it to global scope
+global $container;
 $container  = new Container();
 $configPath = $basePath . '/config/config.php';
 
@@ -53,15 +58,9 @@ if (! file_exists($configPath)) {
 // Expecting config.php to return its configuration array
 $config = require $configPath;
 
-$router = $container->get(Rhapsody\Core\Routing\Router::class);
-
-// 1. Load framework-defined routes first (so they are always available)
-if (file_exists(__DIR__ . '/vendor/arout/rhapsody-core/src/routes.php')) {
-    require __DIR__ . '/vendor/arout/rhapsody-core/src/routes.php';
-}
-
-// 2. Load downstream application routes (allowing the app to override core routes)
-require __DIR__ . '/routes/web.php';
+// =========================================================================
+// STEP 2: SERVICE REGISTRATION (Register bindings into container memory)
+// =========================================================================
 
 // --- EVENT DISPATCHER BINDING ---
 $container->bind(EventDispatcher::class, function (Container $c) {
@@ -122,10 +121,14 @@ $container->bind(Cache::class, function (Container $c) {
 // Make Cache statically accessible (same pattern as Database::getInstance())
 Cache::setInstance($container->resolve(Cache::class));
 
-// Bind the core Database class as a shared instance (singleton pattern)
-$container->bind(Rhapsody\Core\Database::class, function () use ($config) {
-    // Pass the local application config array directly down into the core constructor setup
-    return Rhapsody\Core\Database::getInstance($config);
+// --- CORE PACKAGE DATABASE SINGLETON BINDING ---
+$container->bind(\Rhapsody\Core\Database::class, function () use ($config) {
+    if (empty($config)) {
+        throw new \Exception("The global \$config array is empty during Container service compilation.");
+    }
+
+    // Securely forward the configurations down to your core package class initialization method
+    return \Rhapsody\Core\Database::getInstance($config);
 });
 
 // --- TWIG BINDING ---
@@ -158,9 +161,15 @@ $container->bind(Environment::class, function (Container $c) use ($config, $base
     // App views take priority
     $loader->addPath($basePath . '/views');
 
-    // Register core views under a specific namespace
+    // Register core views under a specific namespace safely
     $coreViewsPath = $basePath . '/vendor/arout/rhapsody-core/resources/views/themes/default';
-    $loader->addPath($coreViewsPath, 'core');
+    if (! is_dir($coreViewsPath)) {
+        $coreViewsPath = $basePath . '/vendor/arout/rhapsody-core/views/themes/default';
+    }
+
+    if (is_dir($coreViewsPath)) {
+        $loader->addPath($coreViewsPath, 'core');
+    }
 
     // --- TWIG CACHING ENABLED ---
     $isDevelopment = ($config['app_env'] === 'development');
@@ -209,7 +218,7 @@ $container->bind(Environment::class, function (Container $c) use ($config, $base
         {
             return Session::hasFlash($name);
         }
-    };;;;;;;;
+    };;;
     $twig->addGlobal('flash', $flash);
 
     $cache = $c->resolve(Cache::class);
@@ -295,11 +304,29 @@ $container->bind(RouteClearCommand::class, function () use ($basePath) {
     return new RouteClearCommand($basePath);
 });
 
+// =========================================================================
+// STEP 3: ROUTING & ENVIRONMENT RUNTIME EXECUTION (Happens Last!)
+// =========================================================================
+
+// Global Middleware Configuration Setup
 $middlewareConfig = $config['middleware'] ?? ['map' => [], 'global' => []];
 Router::setMiddlewareConfig(
     $middlewareConfig['map'],
     $middlewareConfig['global']
 );
 
-// 3. Return the fully configured container.
+// Safely resolve the core router instance now that all configuration recipes are mapped
+$router = $container->resolve(\Rhapsody\Core\Routing\Router::class);
+
+// 1. Load framework-defined routes first (using consistent context paths)
+if (file_exists($basePath . '/vendor/arout/rhapsody-core/src/routes.php')) {
+    require $basePath . '/vendor/arout/rhapsody-core/src/routes.php';
+}
+
+// 2. Load downstream application custom web workspace routes
+if (file_exists($basePath . '/routes/web.php')) {
+    require $basePath . '/routes/web.php';
+}
+
+// 3. Return the completely compiled and configured dependency injection container.
 return $container;

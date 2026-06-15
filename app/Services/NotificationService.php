@@ -7,8 +7,8 @@
  */
 namespace App\Services;
 
-use Core\Cache;
-use Core\Response;
+use Rhapsody\Core\Cache;
+use Rhapsody\Core\Response;
 
 class NotificationService
 {
@@ -62,7 +62,7 @@ class NotificationService
         }
 
         // Set the 6-hour lock key instantly to prevent concurrent page loads from double-pinging
-        $this->cache->set('rhapsody_last_update_check', true, 26600);
+        $this->cache->put('rhapsody_last_update_check', true, 26600);
 
         $options = [
             'http' => [
@@ -83,7 +83,7 @@ class NotificationService
 
         // Compare GitHub's newest tag release with your active local instance version
         if ($latestVersion && version_compare($latestVersion, self::CURRENT_VERSION, '>')) {
-            $this->cache->set('update_available', $latestVersion, 86400 * 4); // Keep banner cache for 96 hours
+            $this->cache->put('update_available', $latestVersion, 86400 * 4); // Keep banner cache for 96 hours
         } else {
             $this->cache->delete('update_available'); // User is up-to-date, clear old values
         }
