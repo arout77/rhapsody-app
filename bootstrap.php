@@ -31,7 +31,7 @@ use Rhapsody\Core\Events\EventDispatcher;
 use Rhapsody\Core\Mailer;
 use Rhapsody\Core\QueryLogger;
 use Rhapsody\Core\Request;
-use Rhapsody\Core\Router;
+use Rhapsody\Core\Routing\Router;
 use Rhapsody\Core\Session;
 use Rhapsody\Core\Validator;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
@@ -43,14 +43,21 @@ use Twig\Loader\FilesystemLoader;
 $basePath = defined('RHAPSODY_APP_ROOT')  ?RHAPSODY_APP_ROOT : dirname(__FILE__);
 
 // 2. Create a new Service Container instance.
-$container = new Container();
-$config    = require $basePath . '/config/config.php';
+$container  = new Container();
+$configPath = $basePath . '/config/config.php';
+
+if (! file_exists($configPath)) {
+    throw new \Exception("Configuration file missing at expected target: " . $configPath);
+}
+
+// Expecting config.php to return its configuration array
+$config = require $configPath;
 
 $router = $container->get(Rhapsody\Core\Routing\Router::class);
 
 // 1. Load framework-defined routes first (so they are always available)
-if (file_exists(__DIR__ . '/vendor/arout77/rhapsody-core/src/routes.php')) {
-    require __DIR__ . '/vendor/arout77/rhapsody-core/src/routes.php';
+if (file_exists(__DIR__ . '/vendor/arout/rhapsody-core/src/routes.php')) {
+    require __DIR__ . '/vendor/arout/rhapsody-core/src/routes.php';
 }
 
 // 2. Load downstream application routes (allowing the app to override core routes)
@@ -115,6 +122,12 @@ $container->bind(Cache::class, function (Container $c) {
 // Make Cache statically accessible (same pattern as Database::getInstance())
 Cache::setInstance($container->resolve(Cache::class));
 
+// Bind the core Database class as a shared instance (singleton pattern)
+$container->bind(Rhapsody\Core\Database::class, function () use ($config) {
+    // Pass the local application config array directly down into the core constructor setup
+    return Rhapsody\Core\Database::getInstance($config);
+});
+
 // --- TWIG BINDING ---
 $container->bind(Environment::class, function (Container $c) use ($config, $basePath) {
     $activeTheme = $config['theme'] ?? 'default';
@@ -143,10 +156,10 @@ $container->bind(Environment::class, function (Container $c) use ($config, $base
 
     $loader = new FilesystemLoader($paths);
     // App views take priority
-    $loader->addPath(__DIR__ . '/views');
+    $loader->addPath($basePath . '/views');
 
     // Register core views under a specific namespace
-    $coreViewsPath = __DIR__ . '/vendor/arout/rhapsody-core/views/themes/default';
+    $coreViewsPath = $basePath . '/vendor/arout/rhapsody-core/resources/views/themes/default';
     $loader->addPath($coreViewsPath, 'core');
 
     // --- TWIG CACHING ENABLED ---
@@ -196,7 +209,7 @@ $container->bind(Environment::class, function (Container $c) use ($config, $base
         {
             return Session::hasFlash($name);
         }
-    };;
+    };;;;;;;;
     $twig->addGlobal('flash', $flash);
 
     $cache = $c->resolve(Cache::class);

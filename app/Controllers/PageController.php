@@ -4,14 +4,14 @@ namespace App\Controllers;
 use App\Middleware\AuthMiddleware;
 use App\Middleware\GuestMiddleware;
 use App\Models\User;
-use Core\BaseController;
-use Core\FileUploader;
-use Core\Mailer;
-use Core\Pagination;
-use Core\Request;
-use Core\Response;
-use Core\Session;
-use Core\Validator;
+use Rhapsody\Core\BaseController;
+use Rhapsody\Core\FileUploader;
+use Rhapsody\Core\Mailer;
+use Rhapsody\Core\Pagination;
+use Rhapsody\Core\Request;
+use Rhapsody\Core\Response;
+use Rhapsody\Core\Session;
+use Rhapsody\Core\Validator;
 use Twig\Environment;
 
 class PageController extends BaseController

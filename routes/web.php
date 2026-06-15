@@ -6,7 +6,7 @@ use App\Controllers\PageController;
 use App\Controllers\UserController;
 use App\Middleware\AuthMiddleware;
 use App\Middleware\GuestMiddleware;
-use Core\Router;
+use Rhapsody\Core\Routing\Router;
 
 // Define your application routes using the static Router methods.
 

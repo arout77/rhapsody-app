@@ -39,7 +39,7 @@ try {
 // 4. Register Error Handling (Whoops)
 // This provides beautiful, detailed error pages during development but
 // should be disabled in a production environment for security.
-$config = require_once $rootPath . '/config.php';
+$config = require_once $rootPath . '/config/config.php';
 
 // Register global error handler (logs errors, custom error pages)
 Rhapsody\Core\ErrorHandler::register($config);
@@ -65,8 +65,8 @@ $container            = require_once $rootPath . '/bootstrap.php';
 $GLOBALS['container'] = $container;
 
 // 7. Use necessary core classes
-use App\Controllers\RouterController;
-use Core\Request;
+use Rhapsody\Core\Controllers\RouterController;
+use Rhapsody\Core\Request;
 
 // 8. Create the Request object
 // This object encapsulates all information about the incoming HTTP request.
