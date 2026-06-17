@@ -66,6 +66,8 @@ $container->bind('config', function () use ($config) {
     return $config;
 });
 
+\Rhapsody\Core\Database::getInstance($config);
+
 // =========================================================================
 // STEP 2: SERVICE REGISTRATION (Register bindings into container memory)
 // =========================================================================
@@ -226,7 +228,7 @@ $container->bind(Environment::class, function (Container $c) use ($config, $base
         {
             return Session::hasFlash($name);
         }
-    };;;
+    };;;;;
 
     $twig->addGlobal('flash', $flash);
 
