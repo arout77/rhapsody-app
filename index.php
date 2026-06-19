@@ -12,6 +12,7 @@
 
 // 1. Register the Composer autoloader
 require_once __DIR__ . '/vendor/autoload.php';
+require_once __DIR__ . '/vendor/arout/rhapsody-core/src/helpers.php';
 
 // --- START DEBUG COLLECTOR ---
 Rhapsody\Core\Debug::getInstance()->start();
