@@ -235,6 +235,8 @@ $container->bind(Environment::class, function (Container $c) use ($config, $base
     };
     $twig->addGlobal('auth', $auth);
     $twig->addGlobal('base_url', $_ENV['APP_URL'] . $_ENV['APP_BASE_URL']);
+    $twig->addGlobal('APP_THEME', $_ENV['APP_THEME']);
+    $twig->addGlobal('app_theme', $_ENV['APP_THEME']);
 
     // Lazy‑loaded flash messages
     $flash = new class {
@@ -246,7 +248,7 @@ $container->bind(Environment::class, function (Container $c) use ($config, $base
         {
             return Session::hasFlash($name);
         }
-    };;;;;;;;;;
+    };;;;;;;;;;;;;
 
     $twig->addGlobal('flash', $flash);
 
