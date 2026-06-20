@@ -69,6 +69,7 @@ return [
     'ddos_blacklist'      => explode(',', $_ENV['DDOS_BLACKLIST'] ?? ''),
     'commands'            => [
         // Framework Core Engine System Commands
+        \Rhapsody\Core\Commands\AuthInstallCommand::class,
         \Rhapsody\Core\Commands\MakeControllerCommand::class,
         \Rhapsody\Core\Commands\MakeModelCommand::class,
         \Rhapsody\Core\Commands\MakeMiddlewareCommand::class,
