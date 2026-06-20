@@ -29,9 +29,11 @@ use Rhapsody\Core\Commands\UpdateCommand;
 use Rhapsody\Core\Container;
 use Rhapsody\Core\Events\EventDispatcher;
 use Rhapsody\Core\Mailer;
+use Rhapsody\Core\Middleware\DdosMiddleware;
 use Rhapsody\Core\QueryLogger;
 use Rhapsody\Core\Request;
 use Rhapsody\Core\Routing\Router;
+use Rhapsody\Core\Services\RateLimiter;
 use Rhapsody\Core\Session;
 use Rhapsody\Core\Validator;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
@@ -66,11 +68,27 @@ $container->bind('config', function () use ($config) {
     return $config;
 });
 
-\Rhapsody\Core\Database::getInstance($config);
-
 // =========================================================================
 // STEP 2: SERVICE REGISTRATION (Register bindings into container memory)
 // =========================================================================
+
+// --- DDOS Middleware ---
+// Bind RateLimiter as a singleton (manual caching)
+$container->bind(RateLimiter::class, function ($container) use ($config) {
+    static $instance = null;
+    if ($instance === null) {
+        $instance = new RateLimiter(Cache::getInstance(), $config);
+    }
+    return $instance;
+});
+
+// Bind DdosMiddleware with its dependencies
+$container->bind(DdosMiddleware::class, function ($container) use ($config) {
+    return new DdosMiddleware(
+        $container->resolve(RateLimiter::class),
+        $config
+    );
+});
 
 // --- EVENT DISPATCHER BINDING ---
 $container->bind(EventDispatcher::class, function (Container $c) {
@@ -228,7 +246,7 @@ $container->bind(Environment::class, function (Container $c) use ($config, $base
         {
             return Session::hasFlash($name);
         }
-    };;;;;
+    };;;;;;;;;;
 
     $twig->addGlobal('flash', $flash);
 

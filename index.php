@@ -30,91 +30,82 @@ if (file_exists($maintenanceFile)) {
 $rootPath = dirname(__FILE__);
 
 // 3. Load environment variables from the .env file
+// 3. Load environment variables from the .env file (with putenv support)
 try {
-    $dotenv = Dotenv\Dotenv::createImmutable($rootPath);
+    // Create a repository that handles both superglobals ($_ENV/$_SERVER) AND putenv()
+    $repository = Dotenv\Repository\RepositoryBuilder::createWithDefaultAdapters()
+        ->addAdapter(Dotenv\Repository\Adapter\PutenvAdapter::class)
+        ->make();
+
+    $dotenv = Dotenv\Dotenv::create($repository, $rootPath);
     $dotenv->load();
 } catch (\Dotenv\Exception\InvalidPathException $e) {
     die('Could not find .env file. Please ensure it exists in the project root: ' . $rootPath);
 }
 
 // 4. Register Error Handling (Whoops)
-// This provides beautiful, detailed error pages during development but
-// should be disabled in a production environment for security.
 $config = require_once $rootPath . '/config/config.php';
-
-// Register global error handler (logs errors, custom error pages)
 Rhapsody\Core\ErrorHandler::register($config);
 
-// Then, if development, Whoops will still work but ErrorHandler takes precedence.
-// if ($config['app_env'] === 'development') {
-//     // Whoops is already registered via ErrorHandler's renderWhoops()
-//     // We can remove the old Whoops registration block entirely.
-//     // Leaving commented out in place for legacy reasons
-//     $whoops = new \Whoops\Run;
-//     $whoops->pushHandler(new \Whoops\Handler\PrettyPageHandler);
-//     $whoops->register();
-// }
-
 // 5. Start the session
-// This makes the $_SESSION superglobal available for our authentication system.
 Rhapsody\Core\Session::start();
 
 // 6. Bootstrap the application and get the service container
-// This is the core of the dependency injection system. The container
-// now knows how to build all our core services.
 $container            = require_once $rootPath . '/bootstrap.php';
 $GLOBALS['container'] = $container;
 
 // 7. Use necessary core classes
-use Rhapsody\Core\Controllers\RouterController;
 use Rhapsody\Core\Request;
+use Rhapsody\Core\Routing\Router;
 
 // 8. Create the Request object
-// This object encapsulates all information about the incoming HTTP request.
 $request = new Request();
 
 // 9. Load the application routes from cache if available
 $routeCachePath = $rootPath . '/storage/cache/routes/routes.php';
 if (file_exists($routeCachePath) && $config['app_env'] === 'production') {
     $routes = require_once $routeCachePath;
-    RouterController::setRoutes($routes);
+    Router::setRoutes($routes);
 } else {
     require_once $rootPath . '/routes/web.php';
     require_once $rootPath . '/routes/api.php';
 }
 
-// 10. Dispatch the request through the router, passing the container
-// The router will execute global middleware (like CSRF), find the matching route,
-// execute its specific middleware (like auth), and finally use the container
-// to build and run the controller.
-$response = RouterController::dispatch($request, $container);
+// 10. Load the middleware configuration and set it on the Router
+// Router::setMiddlewareConfig($config);
+Router::setMiddlewareConfig($config['middleware']);
 
-// NEW: Convert 404 responses to exceptions so the error handler can render custom page
+// 11. Dispatch the request through the router, passing the container
+try {
+    $response = Router::dispatch($request, $container);
+} catch (Rhapsody\Core\Exceptions\HttpException $e) {
+    // Let the error handler take over (it will render a custom error page)
+    throw $e;
+}
+
+// 12. Handle 404/500 responses if they are returned as Response objects (e.g., from middleware)
 if ($response->getStatusCode() === 404) {
     throw new Rhapsody\Core\Exceptions\HttpException(404, 'Page not found');
 }
 if ($response->getStatusCode() === 500) {
     throw new Rhapsody\Core\Exceptions\HttpException(500, 'Server error');
 }
-$matchedRoute = RouterController::getMatchedRoute();
+
+// 13. Get the matched route for debugging
+$matchedRoute = Router::getMatchedRoute();
 
 // --- INJECT DEBUG TOOLBAR ---
-if ($config['app_env'] === 'development') {
-    // Get the headers from the response
-    $headers = $response->getHeaders();
-    // Default to 'text/html' if no content type is set
+if ($config['app_env'] === 'development' && $response->getStatusCode() >= 200 && $response->getStatusCode() < 300) {
+    $headers     = $response->getHeaders();
     $contentType = $headers['Content-Type'] ?? 'text/html';
 
-    // ONLY inject the toolbar if this is an HTML response.
-    // This prevents breaking our JSON API responses.
     if (str_contains($contentType, 'text/html')) {
         $debug = Rhapsody\Core\Debug::getInstance();
-        $debug->end($response, $config, $container, $matchedRoute); // Pass final data to the collector
+        $debug->end($response, $config, $container, $matchedRoute);
         $toolbar     = new Rhapsody\Core\Toolbar($debug->getData());
         $toolbarHtml = $toolbar->render();
 
-        $content = $response->getContent();
-        // Inject toolbar before closing body tag, or append if not found
+        $content         = $response->getContent();
         $bodyEndPosition = strripos($content, '</body>');
         if ($bodyEndPosition !== false) {
             $content = substr_replace($content, $toolbarHtml, $bodyEndPosition, 0);
@@ -123,13 +114,12 @@ if ($config['app_env'] === 'development') {
         }
         $response->setContent($content);
 
-        // --- Inject update notifications if available (in development) ---
-
+        // Inject update notifications if available
         /** @var \App\Services\NotificationService $notificationService */
         $notificationService = $container->resolve(\App\Services\NotificationService::class);
         $response            = $notificationService->injectBanner($response);
     }
 }
 
-// 11. Send the response back to the client
+// 14. Send the response back to the client
 $response->send();

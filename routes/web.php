@@ -13,6 +13,7 @@ use Rhapsody\Core\Routing\Router;
 // --- The routes below can be viewed by visitors and logged in users
 // --- DOCUMENTATION ROUTES ---
 Router::get('/docs/...', [DocsController::class, '...'])->middleware('docs');
+Router::get('/login', [AuthController::class, 'showLoginForm']);
 Router::get('/docs', [DocsController::class, 'index']);
 Router::get('/docs/caching', [DocsController::class, 'performance']);
 Router::get('/docs/cli', [DocsController::class, 'cli']);
@@ -39,6 +40,7 @@ Router::get('/docs/themes', [DocsController::class, 'themes']);
 Router::get('/docs/updating', [DocsController::class, 'updating']);
 Router::get('/docs/validation', [DocsController::class, 'validation']);
 Router::get('/docs/views', [DocsController::class, 'views']);
+Router::get('/docs/ddos-protection', [DocsController::class, 'ddosProtection']);
 
 Router::get('/', [PageController::class, 'index']);
 Router::get('/about', [PageController::class, 'about']);
