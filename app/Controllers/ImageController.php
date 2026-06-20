@@ -31,8 +31,9 @@ class ImageController extends BaseController
         }
 
         $server = ServerFactory::create([
-            'source' => $sourcePath,
-            'cache'  => $cachePath,
+            'source'   => $sourcePath,
+            'cache'    => $cachePath,
+            'security' => false, // simplifies cache key generation
         ]);
 
         // Get query parameters
@@ -42,98 +43,81 @@ class ImageController extends BaseController
         }
         unset($params['route'], $params['_route']);
 
-        try {
+        // ------------------------------------------------------------
+        // Determine the cache subdirectory (mirrors the source path)
+        // ------------------------------------------------------------
+        // e.g., "cena.webp" or "tagteams/team.webp"
+        $cacheSubdir = $path;
+
+        // Full path to the subdirectory
+        $subdirPath = $cachePath . $cacheSubdir;
+
+        // ------------------------------------------------------------
+        // Check if any cached file already exists in this subdirectory
+        // ------------------------------------------------------------
+        $cachedFile = null;
+        if (is_dir($subdirPath)) {
+            $files = glob($subdirPath . '/*');
+            if (! empty($files)) {
+                // Sort by modification time descending (newest first)
+                usort($files, function ($a, $b) {
+                    return filemtime($b) - filemtime($a);
+                });
+                $cachedFile = $files[0];
+            }
+        }
+
+        if (! $cachedFile) {
             // ------------------------------------------------------------
-            // Step 1: Generate the image using outputImage()
-            // This creates a cache file somewhere in $cachePath
+            // No cache – generate the image using outputImage()
             // ------------------------------------------------------------
             ob_start();
             $server->outputImage($path, $params);
             ob_end_clean();
 
-            // ------------------------------------------------------------
-            // Step 2: Recursively find the most recently created cache file
-            // ------------------------------------------------------------
-            $files = $this->findAllFiles($cachePath);
-            if (empty($files)) {
-                throw new \RuntimeException('No cache files found after generation');
-            }
-
-            // Sort by modification time descending (newest first)
-            usort($files, function ($a, $b) {
-                return filemtime($b) - filemtime($a);
-            });
-            $cachedFile = $files[0];
-
-            // Read the cached image
-            $imageContent = file_get_contents($cachedFile);
-            if ($imageContent === false) {
-                // If we can't read the cache, fall back to the original image
-                $originalFile = $sourcePath . $path;
-                if (file_exists($originalFile) && is_readable($originalFile)) {
-                    $imageContent = file_get_contents($originalFile);
-                    if ($imageContent === false) {
-                        throw new \RuntimeException('Failed to read original image');
-                    }
-                    error_log("ImageController: Falling back to original for $path");
-                } else {
-                    throw new \RuntimeException('Original image not found');
+            // Now re‑scan the subdirectory for the newly created file
+            if (is_dir($subdirPath)) {
+                $files = glob($subdirPath . '/*');
+                if (! empty($files)) {
+                    usort($files, function ($a, $b) {
+                        return filemtime($b) - filemtime($a);
+                    });
+                    $cachedFile = $files[0];
                 }
             }
-
-            // ------------------------------------------------------------
-            // Step 3: Determine the content type
-            // ------------------------------------------------------------
-            $ext     = pathinfo($path, PATHINFO_EXTENSION);
-            $mimeMap = [
-                'webp' => 'image/webp',
-                'jpg'  => 'image/jpeg',
-                'jpeg' => 'image/jpeg',
-                'png'  => 'image/png',
-                'gif'  => 'image/gif',
-                'svg'  => 'image/svg+xml',
-            ];
-            $contentType = $mimeMap[strtolower($ext)] ?? 'image/jpeg';
-
-            // ------------------------------------------------------------
-            // Step 4: Build and return the response
-            // ------------------------------------------------------------
-            $response = new Response();
-            $response->setContent($imageContent);
-            $response->setHeader('Content-Type', $contentType);
-            $response->setHeader('Content-Length', (string) strlen($imageContent));
-            $response->setHeader('Cache-Control', 'public, max-age=86400');
-
-            return $response;
-
-        } catch (\League\Glide\Exception\FileNotFoundException $e) {
-            return $this->errorResponse('Image not found: ' . $path, 404);
-        } catch (\Exception $e) {
-            error_log('Image processing error: ' . $e->getMessage());
-            return $this->errorResponse('Unable to process image', 500);
-        }
-    }
-
-    /**
-     * Recursively find all files in a directory and its subdirectories.
-     *
-     * @param string $directory
-     * @return array List of file paths
-     */
-    private function findAllFiles(string $directory): array
-    {
-        $files    = [];
-        $iterator = new \RecursiveIteratorIterator(
-            new \RecursiveDirectoryIterator($directory, \RecursiveDirectoryIterator::SKIP_DOTS)
-        );
-
-        foreach ($iterator as $file) {
-            if ($file->isFile()) {
-                $files[] = $file->getPathname();
-            }
         }
 
-        return $files;
+        if (! $cachedFile) {
+            throw new \RuntimeException('Cache file not found after generation');
+        }
+
+        // ------------------------------------------------------------
+        // Read the cached file and serve it
+        // ------------------------------------------------------------
+        $imageContent = file_get_contents($cachedFile);
+        if ($imageContent === false) {
+            throw new \RuntimeException('Failed to read cached image');
+        }
+
+        // Determine MIME type from the file extension
+        $ext     = pathinfo($path, PATHINFO_EXTENSION);
+        $mimeMap = [
+            'webp' => 'image/webp',
+            'jpg'  => 'image/jpeg',
+            'jpeg' => 'image/jpeg',
+            'png'  => 'image/png',
+            'gif'  => 'image/gif',
+            'svg'  => 'image/svg+xml',
+        ];
+        $contentType = $mimeMap[strtolower($ext)] ?? 'image/jpeg';
+
+        $response = new Response();
+        $response->setContent($imageContent);
+        $response->setHeader('Content-Type', $contentType);
+        $response->setHeader('Content-Length', (string) strlen($imageContent));
+        $response->setHeader('Cache-Control', 'public, max-age=86400');
+
+        return $response;
     }
 
     private function errorResponse(string $message, int $statusCode = 404): Response
