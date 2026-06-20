@@ -1,5 +1,6 @@
 <?php
 
+use App\Controllers\ImageController;
 use App\Controllers\PageController;
 use App\Controllers\UserController;
 use App\Middleware\AuthMiddleware;
@@ -11,6 +12,9 @@ use Rhapsody\Core\Routing\Router;
 // Define your application routes using the static Router methods.
 
 // --- The routes below can be viewed by visitors and logged in users
+// --- DO NOT REMOVE. This is the route for the image resizer/caching
+Router::get('/img/{path}', [ImageController::class, 'show']);
+
 // --- DOCUMENTATION ROUTES ---
 Router::get('/docs/...', [DocsController::class, '...'])->middleware('docs');
 Router::get('/login', [AuthController::class, 'showLoginForm']);
