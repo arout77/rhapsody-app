@@ -29,9 +29,17 @@ class PageController extends BaseController
      *
      * @return Response
      */
-    public function index(): Response
+    public function index(Request $request): Response
     {
-        return $this->view('@core/home/landing.twig');
+        return $this->view(
+            '@core/home/landing.twig',
+            [], // no extra template data
+            [   // meta data goes here
+                'title'         => 'Welcome to Rhapsody',
+                'description'   => 'A custom high-performance PHP framework.',
+                'canonical_url' => $request->getCanonicalUrl(),
+            ]
+        );
     }
 
     /**
