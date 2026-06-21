@@ -10,15 +10,18 @@
  * and handing the request off to the router.
  */
 
+// Define the absolute path to the downstream application's root directory
+define('ROOT_DIR', dirname(__FILE__));
+
 // 1. Register the Composer autoloader
-require_once __DIR__ . '/vendor/autoload.php';
-require_once __DIR__ . '/vendor/arout/rhapsody-core/src/helpers.php';
+require ROOT_DIR . '/vendor/autoload.php';
+require_once ROOT_DIR . '/vendor/arout/rhapsody-core/src/helpers.php';
 
 // --- START DEBUG COLLECTOR ---
 Rhapsody\Core\Debug::getInstance()->start();
 
 // --- ADD MAINTENANCE MODE CHECK ---
-$maintenanceFile = __DIR__ . '/storage/framework/down';
+$maintenanceFile = ROOT_DIR . '/storage/framework/down';
 if (file_exists($maintenanceFile)) {
     http_response_code(503);
     echo "<h1>Be right back.</h1><p>We are currently performing scheduled maintenance. Please check back soon.</p>";
@@ -26,10 +29,8 @@ if (file_exists($maintenanceFile)) {
 }
 // --- END MAINTENANCE MODE CHECK ---
 
-// 2. Define the project root path for reliability
-$rootPath = dirname(__FILE__);
+$rootPath = ROOT_DIR;
 
-// 3. Load environment variables from the .env file
 // 3. Load environment variables from the .env file (with putenv support)
 try {
     // Create a repository that handles both superglobals ($_ENV/$_SERVER) AND putenv()
