@@ -7,6 +7,7 @@ use App\Services\NotificationService;
 use Doctrine\DBAL\DriverManager;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\ORMSetup;
+use Omnipay\Omnipay;
 use Predis\Client as RedisClient;
 use Rhapsody\Core\Cache;
 use Rhapsody\Core\Cache\CacheInterface;
@@ -27,7 +28,10 @@ use Rhapsody\Core\Commands\RouteCacheCommand;
 use Rhapsody\Core\Commands\RouteClearCommand;
 use Rhapsody\Core\Commands\UpdateCommand;
 use Rhapsody\Core\Container;
+use Rhapsody\Core\Contracts\PaymentGatewayInterface;
 use Rhapsody\Core\Events\EventDispatcher;
+use Rhapsody\Core\Helpers\OmnipayGateway;
+use Rhapsody\Core\Helpers\Path;
 use Rhapsody\Core\Mailer;
 use Rhapsody\Core\Middleware\DdosMiddleware;
 use Rhapsody\Core\QueryLogger;
@@ -46,7 +50,7 @@ use Twig\Loader\FilesystemLoader;
 // =========================================================================
 
 // 1. Establish the explicit runtime application path base directory context Safely
-$basePath = defined('RHAPSODY_APP_ROOT')  ?RHAPSODY_APP_ROOT : dirname(__FILE__);
+$basePath = Path::root();
 
 if (file_exists(__DIR__ . '/.env')) {
     $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
@@ -248,7 +252,7 @@ $container->bind(Environment::class, function (Container $c) use ($config, $base
         {
             return Session::hasFlash($name);
         }
-    };;;;;;;;;;;;;
+    };;;;;;;;;;;;;;;;;;
 
     $twig->addGlobal('flash', $flash);
 
@@ -265,6 +269,38 @@ $container->bind(Environment::class, function (Container $c) use ($config, $base
 
 // --- OTHER CORE SERVICES ---
 $container->bind(\Rhapsody\Core\Contracts\AuthenticatableInterface::class, \App\Models\User::class);
+$container->bind(PaymentGatewayInterface::class, function () {
+    // Instantiate Omnipay dynamically based on an ENV variable (e.g., Stripe, PayPal_Rest)
+    $gatewayType = $_ENV['PAYMENT_GATEWAY'] ?? 'Stripe';
+
+    $gateway = Omnipay::create($gatewayType);
+
+    // Configure API keys based on the driver
+    if ($gatewayType === 'Stripe') {
+        $gateway->setApiKey($_ENV['STRIPE_SECRET_KEY'] ?? '');
+    } elseif ($gatewayType === 'PayPal_Rest') {
+        $gateway->setClientId($_ENV['PAYPAL_CLIENT_ID'] ?? '');
+        $gateway->setSecret($_ENV['PAYPAL_SECRET'] ?? '');
+        $gateway->setTestMode(true);
+    }
+
+    return new OmnipayGateway($gateway);
+});
+
+// bind the EventDispatcher with its listener map
+$container->bind(\Rhapsody\Core\Events\EventDispatcher::class, function () use ($container) {
+    $listeners = [
+        \App\Events\PaymentSucceededEvent::class => [
+            \App\Listeners\SendPaymentConfirmationEmail::class,
+            \App\Listeners\UpdateOrderStatus::class,
+        ],
+        \App\Events\PaymentFailedEvent::class    => [
+            \App\Listeners\LogPaymentFailure::class,
+        ],
+    ];
+    return new \Rhapsody\Core\Events\EventDispatcher($container, $listeners);
+});
+
 $container->bind(Rhapsody\Core\Mailer::class, function ($c) use ($config) {
     return new \Rhapsody\Core\Mailer($config['mailer'] ?? []);
 });

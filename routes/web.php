@@ -1,8 +1,9 @@
 <?php
 
-use App\Controllers\ImageController;
+use App\Controllers\BillingController;
 use App\Controllers\PageController;
 use App\Controllers\UserController;
+use App\Controllers\WebhookController;
 use App\Middleware\AuthMiddleware;
 use App\Middleware\GuestMiddleware;
 use Rhapsody\Core\Controllers\AuthController;
@@ -11,10 +12,12 @@ use Rhapsody\Core\Routing\Router;
 
 // Define your application routes using the static Router methods.
 
-// --- The routes below can be viewed by visitors and logged in users
-// --- DO NOT REMOVE. This is the route for the image resizer/caching
-Router::get('/img/{path}', [ImageController::class, 'show']);
+// --- Payment helper. You can remove/modify this as needed
+Router::post('/billing/charge', [BillingController::class, 'charge']);
+Router::post('/charge', [BillingController::class, 'charge']);
+Router::post('/webhook', [WebhookController::class, 'handle']);
 
+// --- The routes below can be viewed by visitors and logged in users
 // --- DOCUMENTATION ROUTES ---
 Router::get('/docs/...', [DocsController::class, '...'])->middleware('docs');
 Router::get('/login', [AuthController::class, 'showLoginForm']);
