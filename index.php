@@ -134,6 +134,7 @@ try {
     // HTML response – try to render a themed error page
     $theme   = $_ENV['APP_THEME'] ?? $config['theme'] ?? 'default';
     $context = [
+        'config'   => $config,
         'base_url' => $_ENV['APP_URL'] . ($_ENV['APP_BASE_URL'] ?? ''),
         'app_env'  => $_ENV['APP_ENV'] ?? 'production',
         'meta'     => [

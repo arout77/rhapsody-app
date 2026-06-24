@@ -22,7 +22,9 @@ use Rhapsody\Core\Commands\MakeListenerCommand;
 use Rhapsody\Core\Commands\MakeMiddlewareCommand;
 use Rhapsody\Core\Commands\MakeMigrationCommand;
 use Rhapsody\Core\Commands\MakeModelCommand;
+use Rhapsody\Core\Commands\MakeReactCommand;
 use Rhapsody\Core\Commands\MigrateCommand;
+use Rhapsody\Core\Commands\ReactInstallCommand;
 use Rhapsody\Core\Commands\RouteCacheCommand;
 use Rhapsody\Core\Commands\RouteClearCommand;
 use Rhapsody\Core\Commands\UpdateCommand;
@@ -251,7 +253,7 @@ $container->bind(Environment::class, function (Container $c) use ($config, $base
         {
             return Session::hasFlash($name);
         }
-    };;;;;;;;
+    };;;;;;;;;;
 
     $twig->addGlobal('flash', $flash);
 
@@ -339,6 +341,14 @@ $container->bind(RouteCacheCommand::class, function () use ($basePath) {
 
 $container->bind(RouteClearCommand::class, function () use ($basePath) {
     return new RouteClearCommand($basePath);
+});
+
+$container->bind(ReactInstallCommand::class, function () use ($basePath) {
+    return new ReactInstallCommand($basePath);
+});
+
+$container->bind(MakeReactCommand::class, function () use ($basePath) {
+    return new MakeReactCommand($basePath);
 });
 
 // =========================================================================

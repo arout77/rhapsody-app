@@ -85,5 +85,7 @@ return [
         \Rhapsody\Core\Commands\CheckVersionCommand::class,
         \Rhapsody\Core\Commands\MakeEventCommand::class,
         \Rhapsody\Core\Commands\MakeListenerCommand::class,
+        \Rhapsody\Core\Commands\ReactInstallCommand::class,
+        \Rhapsody\Core\Commands\MakeReactCommand::class,
     ],
 ];
