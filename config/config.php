@@ -49,10 +49,11 @@ return [
     'middleware'          => [
         // Route-specific middleware (key => class)
         'map'    => [
-            'auth'    => \Rhapsody\Core\Middleware\AuthMiddleware::class,
-            'guest'   => \Rhapsody\Core\Middleware\GuestMiddleware::class,
-            'updates' => \Rhapsody\Core\Middleware\CheckUpdatesMiddleware::class,
-            'docs'    => \Rhapsody\Core\Middleware\DocsAccessMiddleware::class,
+            'auth'            => \Rhapsody\Core\Middleware\AuthMiddleware::class,
+            'guest'           => \Rhapsody\Core\Middleware\GuestMiddleware::class,
+            'updates'         => \Rhapsody\Core\Middleware\CheckUpdatesMiddleware::class,
+            'docs'            => \Rhapsody\Core\Middleware\DocsAccessMiddleware::class,
+            'usertableexists' => \Rhapsody\Core\Middleware\EnsureSchemaIsMigratedMiddleware::class,
         ],
         // Global middleware (runs on every matched request)
         'global' => [

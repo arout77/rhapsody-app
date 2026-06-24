@@ -1,0 +1,22 @@
+{% extends 'layouts/main.twig' %}
+
+{% block title %}{{ post.title }} - Rhapsody Blog{% endblock %}
+{% block description %}{{ post.excerpt }}{% endblock %}
+
+{% block head %}
+    {{ parent() }}
+    {% if meta.canonical_url is defined %}
+        <link rel="canonical" href="{{ meta.canonical_url }}">
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    <article>
+        <h2>{{ post.title }}</h2>
+        <p style="font-style: italic; color: #666;">Published on: {{ post.date }}</p>
+        
+        <div class="post-body">
+            {{ post.body | raw }}
+        </div>
+    </article>
+{% endblock %}

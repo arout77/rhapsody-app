@@ -32,7 +32,7 @@ class PageController extends BaseController
     public function index(Request $request): Response
     {
         return $this->view(
-            '@core/home/landing.twig',
+            'home/landing.twig',
             [], // no extra template data
             [   // meta data goes here
                 'title'         => 'Welcome to Rhapsody',

@@ -7,7 +7,6 @@ use App\Services\NotificationService;
 use Doctrine\DBAL\DriverManager;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\ORMSetup;
-use Omnipay\Omnipay;
 use Predis\Client as RedisClient;
 use Rhapsody\Core\Cache;
 use Rhapsody\Core\Cache\CacheInterface;
@@ -28,10 +27,7 @@ use Rhapsody\Core\Commands\RouteCacheCommand;
 use Rhapsody\Core\Commands\RouteClearCommand;
 use Rhapsody\Core\Commands\UpdateCommand;
 use Rhapsody\Core\Container;
-use Rhapsody\Core\Contracts\PaymentGatewayInterface;
 use Rhapsody\Core\Events\EventDispatcher;
-use Rhapsody\Core\Helpers\OmnipayGateway;
-use Rhapsody\Core\Helpers\Path;
 use Rhapsody\Core\Mailer;
 use Rhapsody\Core\Middleware\DdosMiddleware;
 use Rhapsody\Core\QueryLogger;
@@ -50,12 +46,7 @@ use Twig\Loader\FilesystemLoader;
 // =========================================================================
 
 // 1. Establish the explicit runtime application path base directory context Safely
-$basePath = Path::root();
-
-if (file_exists(__DIR__ . '/.env')) {
-    $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
-    $dotenv->load();
-}
+$basePath = defined('RHAPSODY_APP_ROOT')  ?RHAPSODY_APP_ROOT : dirname(__FILE__);
 
 // 2. Create a new Service Container instance and assign it to global scope
 global $container;
@@ -107,7 +98,10 @@ $container->bind(QueryLogger::class, function () {
 
 // --- DOCTRINE ENTITY MANAGER BINDING ---
 $container->bind(EntityManager::class, function ($container) use ($config, $basePath) {
-    $paths     = [$basePath . '/app/Entities'];
+    $paths = [
+        $basePath . '/app/Entities',
+        $basePath . '/vendor/arout/rhapsody-core/src/Entities',
+    ];
     $isDevMode = ($config['app_env'] ?? 'production') === 'development';
 
     // Retrieve the same logger instance (singleton)
@@ -165,7 +159,7 @@ $container->bind(\Rhapsody\Core\Database::class, function () use ($config) {
 
 // --- TWIG BINDING ---
 $container->bind(Environment::class, function (Container $c) use ($config, $basePath) {
-    $activeTheme = $config['theme'] ?? 'default';
+    $activeTheme = $_ENV['APP_THEME'] ?? $config['theme'] ?? 'default';
     $paths       = [];
 
     // The active theme path is always the first priority.
@@ -178,6 +172,11 @@ $container->bind(Environment::class, function (Container $c) use ($config, $base
     $defaultThemePath = $basePath . '/views/themes/default';
     if ($activeTheme !== 'default' && is_dir($defaultThemePath)) {
         $paths[] = $defaultThemePath;
+    }
+
+    $coreThemePath = $basePath . '/vendor/arout/rhapsody-core/resources/views/themes/default';
+    if ($activeTheme === 'default' && is_dir($coreThemePath)) {
+        $paths[] = $coreThemePath;
     }
 
     // If for some reason no paths were added (e.g., bad config), fallback to default.
@@ -212,7 +211,7 @@ $container->bind(Environment::class, function (Container $c) use ($config, $base
     ];
 
     $twig = new Environment($loader, $twigOptions);
-    $twig->addGlobal('app_url', $_ENV['APP_URL'] ?? '');
+    $twig->addGlobal('app_url', $_ENV['APP_URL'] . $_ENV['APP_BASE_URL'] ?? '');
     $twig->addGlobal('app_env', $_ENV['APP_ENV'] ?? 'production');
 
     // Auth lazy object
@@ -252,7 +251,7 @@ $container->bind(Environment::class, function (Container $c) use ($config, $base
         {
             return Session::hasFlash($name);
         }
-    };;;;;;;;;;;;;;;;;;
+    };;;;;;;;
 
     $twig->addGlobal('flash', $flash);
 
@@ -269,38 +268,6 @@ $container->bind(Environment::class, function (Container $c) use ($config, $base
 
 // --- OTHER CORE SERVICES ---
 $container->bind(\Rhapsody\Core\Contracts\AuthenticatableInterface::class, \App\Models\User::class);
-$container->bind(PaymentGatewayInterface::class, function () {
-    // Instantiate Omnipay dynamically based on an ENV variable (e.g., Stripe, PayPal_Rest)
-    $gatewayType = $_ENV['PAYMENT_GATEWAY'] ?? 'Stripe';
-
-    $gateway = Omnipay::create($gatewayType);
-
-    // Configure API keys based on the driver
-    if ($gatewayType === 'Stripe') {
-        $gateway->setApiKey($_ENV['STRIPE_SECRET_KEY'] ?? '');
-    } elseif ($gatewayType === 'PayPal_Rest') {
-        $gateway->setClientId($_ENV['PAYPAL_CLIENT_ID'] ?? '');
-        $gateway->setSecret($_ENV['PAYPAL_SECRET'] ?? '');
-        $gateway->setTestMode(true);
-    }
-
-    return new OmnipayGateway($gateway);
-});
-
-// bind the EventDispatcher with its listener map
-$container->bind(\Rhapsody\Core\Events\EventDispatcher::class, function () use ($container) {
-    $listeners = [
-        \App\Events\PaymentSucceededEvent::class => [
-            \App\Listeners\SendPaymentConfirmationEmail::class,
-            \App\Listeners\UpdateOrderStatus::class,
-        ],
-        \App\Events\PaymentFailedEvent::class    => [
-            \App\Listeners\LogPaymentFailure::class,
-        ],
-    ];
-    return new \Rhapsody\Core\Events\EventDispatcher($container, $listeners);
-});
-
 $container->bind(Rhapsody\Core\Mailer::class, function ($c) use ($config) {
     return new \Rhapsody\Core\Mailer($config['mailer'] ?? []);
 });
@@ -380,10 +347,7 @@ $container->bind(RouteClearCommand::class, function () use ($basePath) {
 
 // Global Middleware Configuration Setup
 $middlewareConfig = $config['middleware'] ?? ['map' => [], 'global' => []];
-Router::setMiddlewareConfig(
-    $middlewareConfig['map'],
-    $middlewareConfig['global']
-);
+Router::setMiddlewareConfig($middlewareConfig);
 
 // Safely resolve the core router instance now that all configuration recipes are mapped
 $router = $container->resolve(\Rhapsody\Core\Routing\Router::class);

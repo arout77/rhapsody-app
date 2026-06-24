@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% block head %}
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>{% block title %}Rhapsody App{% endblock %}</title>
+        <meta name="description" content="{% block description %}Built with the Rhapsody Framework{% endblock %}">
+        
+        <style>
+            body { background: #f0e6d2; color: #2b2b2b; font-family: 'Courier New', monospace; margin: 2rem; }
+            header { border-bottom: 3px double #2b2b2b; padding-bottom: 1rem; margin-bottom: 2rem; }
+            nav a { margin-right: 15px; color: #b22222; text-decoration: none; font-weight: bold; }
+            nav a:hover { text-decoration: underline; }
+            footer { margin-top: 3rem; border-top: 1px dashed #2b2b2b; padding-top: 1rem; font-size: 0.8rem; }
+            .badge { background: #2b2b2b; color: #f0e6d2; padding: 2px 6px; font-size: 0.75rem; }
+        </style>
+    {% endblock %}
+</head>
+<body>
+
+    <header>
+        <h1>💾 Rhapsody Retro Theme</h1>
+        <nav>
+            <a href="/">Home</a>
+            <a href="/blog/sample-slug">Sample Post</a>
+            <a href="/missing-page">Test 404 Fallback</a>
+        </nav>
+    </header>
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Powered by Rhapsody Framework. Active Theme: <span class="badge">rhapsody-retro</span></p>
+    </footer>
+
+</body>
+</html>
