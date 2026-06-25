@@ -45,9 +45,13 @@ export default defineConfig({
 
         // Allow the PHP server to load assets cross-origin.
         cors: true,
-
+        strictPort: true,
         // The origin Vite dev server tags into asset URLs.
         // Must be accessible from the browser.
         origin: `http://localhost:${parseInt(process.env.VITE_PORT ?? '5173', 10)}`,
+        allowedHosts: true,  // For Vite 6+ (prevents 403 restrictions)
+          hmr: {
+            host: 'localhost'  // Ensures hot module replacement connects cleanly
+          }
     },
 });
