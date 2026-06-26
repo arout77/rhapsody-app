@@ -202,6 +202,7 @@ $container->bind(Environment::class, function (Container $c) use ($config, $base
 
     if (is_dir($coreViewsPath)) {
         $loader->addPath($coreViewsPath, 'core');
+        $loader->addPath($coreViewsPath);
     }
 
     // --- TWIG CACHING ENABLED ---
@@ -213,6 +214,11 @@ $container->bind(Environment::class, function (Container $c) use ($config, $base
     ];
 
     $twig = new Environment($loader, $twigOptions);
+
+    // Register React island functions here — not in BaseController — so they are
+    // available on every render including error pages that run before any controller.
+    $twig->addExtension(new \Rhapsody\Core\React\ReactIslandExtension());
+
     $twig->addGlobal('app_url', $_ENV['APP_URL'] ?? '');
     $twig->addGlobal('app_env', $_ENV['APP_ENV'] ?? 'production');
 
@@ -253,7 +259,7 @@ $container->bind(Environment::class, function (Container $c) use ($config, $base
         {
             return Session::hasFlash($name);
         }
-    };;;;;;;;;;;;;;;;;;;;
+    };;;;;;;;;;;;;;;;;;;;;;;;
 
     $twig->addGlobal('flash', $flash);
 
