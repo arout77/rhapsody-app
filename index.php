@@ -52,7 +52,7 @@ Rhapsody\Core\ErrorHandler::register($config);
 Rhapsody\Core\Session::start();
 
 // 6. Bootstrap the application and get the service container
-$container            = require_once $rootPath . '/bootstrap.php';
+$container            = require ROOT_DIR . '/vendor/arout/rhapsody-core/src/bootstrap.php';
 $GLOBALS['container'] = $container;
 
 // 7. Use necessary core classes
