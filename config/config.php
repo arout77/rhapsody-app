@@ -49,11 +49,10 @@ return [
     'middleware'          => [
         // Route-specific middleware (key => class)
         'map'    => [
-            'auth'            => \Rhapsody\Core\Middleware\AuthMiddleware::class,
-            'guest'           => \Rhapsody\Core\Middleware\GuestMiddleware::class,
-            'updates'         => \Rhapsody\Core\Middleware\CheckUpdatesMiddleware::class,
-            'docs'            => \Rhapsody\Core\Middleware\DocsAccessMiddleware::class,
-            'usertableexists' => \Rhapsody\Core\Middleware\EnsureSchemaIsMigratedMiddleware::class,
+            'auth'    => \Rhapsody\Core\Middleware\AuthMiddleware::class,
+            'guest'   => \Rhapsody\Core\Middleware\GuestMiddleware::class,
+            'updates' => \Rhapsody\Core\Middleware\CheckUpdatesMiddleware::class,
+            'docs'    => \Rhapsody\Core\Middleware\DocsAccessMiddleware::class,
         ],
         // Global middleware (runs on every matched request)
         'global' => [
@@ -83,9 +82,9 @@ return [
         \Rhapsody\Core\Commands\EnvSyncCommand::class,
         \Rhapsody\Core\Commands\UpdateCommand::class,
         \Rhapsody\Core\Commands\CheckVersionCommand::class,
-        \Rhapsody\Core\Commands\MakeEventCommand::class,
-        \Rhapsody\Core\Commands\MakeListenerCommand::class,
         \Rhapsody\Core\Commands\ReactInstallCommand::class,
         \Rhapsody\Core\Commands\MakeReactCommand::class,
+        \Rhapsody\Core\Commands\MakeEventCommand::class,
+        \Rhapsody\Core\Commands\MakeListenerCommand::class,
     ],
 ];
