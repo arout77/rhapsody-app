@@ -1,18 +1,30 @@
 <?php
 namespace App\Listeners;
 
-use Rhapsody\Core\Events\Event;
-use Rhapsody\Core\Events\ListenerInterface;
-use Rhapsody\Core\Events\PaymentSucceededEvent;
+use App\Events\PaymentSucceededEvent;
+use Rhapsody\Core\Mailer;
 
-class SendPaymentConfirmationEmail implements ListenerInterface
+class SendPaymentConfirmationEmail
 {
-    public function handle(Event $event): void
+    public function __construct(
+        protected Mailer $mailer
+    ) {}
+
+    public function handle(PaymentSucceededEvent $event): void
     {
-        if (! $event instanceof PaymentSucceededEvent) {
-            return;
-        }
-        // Send email to customer using your mailer
-        // e.g., Mail::to($user->email)->send(new PaymentConfirmation($event));
+        // Fetch the order from the database using the transaction ID or metadata
+        // $order = $this->orderRepository->findByTransactionId($event->transactionId);
+
+                                           // For demonstration, we'll just send a generic confirmation.
+        $to      = 'customer@example.com'; // Replace with actual customer email
+        $subject = 'Payment Confirmation';
+        $body    = sprintf(
+            "Thank you! Your payment of %.2f %s was successful.\nTransaction ID: %s",
+            $event->amount,
+            $event->currency,
+            $event->transactionId
+        );
+
+        $this->mailer->send($to, $subject, $body);
     }
 }

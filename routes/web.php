@@ -3,10 +3,12 @@
 use App\Controllers\ImageController;
 use App\Controllers\PageController;
 use App\Controllers\UserController;
+use App\Controllers\WebhookController;
 use App\Middleware\AuthMiddleware;
 use App\Middleware\GuestMiddleware;
 use Rhapsody\Core\Controllers\AuthController;
 use Rhapsody\Core\Controllers\DocsController;
+use Rhapsody\Core\Controllers\SocialAuthController;
 use Rhapsody\Core\Routing\Router;
 
 // Define your application routes using the static Router methods.
@@ -14,6 +16,11 @@ use Rhapsody\Core\Routing\Router;
 // --- The routes below can be viewed by visitors and logged in users
 // --- DO NOT REMOVE. This is the route for the image resizer/caching
 Router::get('/img/{path}', [ImageController::class, 'show']);
+
+// Social login routes
+Router::get('/auth/{provider}', [SocialAuthController::class, 'redirectToProvider']);
+Router::get('/auth/{provider}/callback', [SocialAuthController::class, 'handleProviderCallback']);
+Router::get('/auth/redirect/{provider}', [SocialAuthController::class, 'redirectToProvider'])->name('auth.redirect');
 
 Router::get('/', [PageController::class, 'index']);
 Router::get('/about', [PageController::class, 'about']);
@@ -49,3 +56,6 @@ Router::get('/register', [AuthController::class, 'showRegisterForm'])
 Router::post('/register', [AuthController::class, 'register'])
     ->middleware('usertableexists')
     ->middleware('guest');
+
+// --- Omnipay
+Router::post('/payment/webhook', [WebhookController::class, 'handle']);

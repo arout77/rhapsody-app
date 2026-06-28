@@ -7,6 +7,7 @@ use Rhapsody\Core\Events\PaymentFailedEvent;
 use Rhapsody\Core\Events\PaymentSucceededEvent;
 use Rhapsody\Core\Request;
 use Rhapsody\Core\Response;
+use Stripe\WebhookSignature;
 
 class WebhookController extends BaseWebhookController
 {
@@ -16,15 +17,25 @@ class WebhookController extends BaseWebhookController
 
     public function handle(Request $request): Response
     {
-        // Verify the webhook signature (example for Stripe)
-        $payload   = $request->getContent();
-        $signature = $request->header('Stripe-Signature');
-        $secret    = $_ENV['STRIPE_WEBHOOK_SECRET'];
+        $payload         = $request->getContent();
+        $signatureHeader = $request->header('Stripe-Signature');
+        $webhookSecret   = $_ENV['STRIPE_WEBHOOK_SECRET'] ?? null;
+
+        // If you use a different gateway, adapt this section accordingly.
+        if (empty($webhookSecret)) {
+            // Fallback: log and reject
+            error_log('[Webhook] Missing STRIPE_WEBHOOK_SECRET in environment.');
+            return $this->json(['error' => 'Webhook secret not configured'], 500);
+        }
 
         try {
-            // Use Omnipay or a dedicated library to verify signature
-            // For Stripe, you can use \Stripe\Webhook::constructEvent()
-            // For simplicity, we'll assume verification is done.
+            // Verify the signature (throws exception on failure)
+            WebhookSignature::verifyHeader(
+                $payload,
+                $signatureHeader,
+                $webhookSecret,
+                $tolerance = 300// seconds
+            );
 
             $data      = json_decode($payload, true);
             $eventType = $data['type'] ?? '';
@@ -35,27 +46,46 @@ class WebhookController extends BaseWebhookController
                         new PaymentSucceededEvent(
                             transactionId: $data['data']['object']['id'],
                             amount: $data['data']['object']['amount'] / 100,
+                            currency: $data['data']['object']['currency'] ?? 'USD',
                             metadata: $data['data']['object']['metadata'] ?? []
                         )
                     );
                     break;
+                case 'charge.succeeded': // fallback for older events
+                    $this->dispatcher->dispatch(
+                        new PaymentSucceededEvent(
+                            transactionId: $data['data']['object']['id'],
+                            amount: $data['data']['object']['amount'] / 100,
+                            currency: $data['data']['object']['currency'] ?? 'USD',
+                            metadata: $data['data']['object']['metadata'] ?? []
+                        )
+                    );
+                    break;
+
                 case 'payment_intent.payment_failed':
+                case 'charge.failed':
+                    $error   = $data['data']['object']['last_payment_error'] ?? null;
+                    $message = $error['message'] ?? 'Payment failed';
                     $this->dispatcher->dispatch(
                         new PaymentFailedEvent(
-                            message: $data['data']['object']['last_payment_error']['message'] ?? 'Payment failed',
+                            message: $message,
                             context: $data['data']['object']
                         )
                     );
                     break;
+
                 default:
-                    // Ignore other events
+                    // Acknowledge other events (e.g., customer.created, invoice.paid)
+                    // but do nothing.
                     break;
             }
 
             return $this->json(['status' => 'success']);
+
         } catch (\Exception $e) {
-            // Log the error and return a 400
-            return $this->json(['error' => 'Webhook error'], 400);
+            // Log the full error for debugging (use a proper logger if available)
+            error_log('[Webhook] Error: ' . $e->getMessage());
+            return $this->json(['error' => 'Webhook verification failed'], 400);
         }
     }
 }

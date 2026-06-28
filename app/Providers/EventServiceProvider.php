@@ -1,9 +1,13 @@
 <?php
-
 namespace App\Providers;
 
+use App\Events\PaymentFailedEvent;
+use App\Events\PaymentSucceededEvent;
 use App\Events\UserRegistered;
+use App\Listeners\LogPaymentFailure;
+use App\Listeners\SendPaymentConfirmationEmail;
 use App\Listeners\SendWelcomeEmail;
+use App\Listeners\UpdateOrderStatus;
 
 class EventServiceProvider
 {
@@ -13,8 +17,15 @@ class EventServiceProvider
      * @var array
      */
     protected array $listen = [
-        UserRegistered::class => [
+        UserRegistered::class        => [
             SendWelcomeEmail::class,
+        ],
+        PaymentSucceededEvent::class => [
+            SendPaymentConfirmationEmail::class,
+            UpdateOrderStatus::class,
+        ],
+        PaymentFailedEvent::class    => [
+            LogPaymentFailure::class,
         ],
     ];
 

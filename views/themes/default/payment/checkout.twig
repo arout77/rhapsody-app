@@ -1,0 +1,10 @@
+{% extends 'layouts/main.twig' %}
+
+{% block content %}
+<form method="POST" action="{{ route('payment.checkout') }}">
+    {{ csrf_field() }}
+    <label>Amount</label>
+    <input type="number" name="amount" value="10.00" step="0.01">
+    <button type="submit">Pay with {{ env('PAYMENT_GATEWAY') }}</button>
+</form>
+{% endblock %}

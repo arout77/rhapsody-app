@@ -1,18 +1,23 @@
 <?php
 namespace App\Listeners;
 
-use Rhapsody\Core\Events\Event;
-use Rhapsody\Core\Events\ListenerInterface;
-use Rhapsody\Core\Events\PaymentFailedEvent;
+use App\Events\PaymentFailedEvent;
 
-class LogPaymentFailure implements ListenerInterface
+class LogPaymentFailure
 {
-    public function handle(Event $event): void
+    public function handle(PaymentFailedEvent $event): void
     {
-        if (! $event instanceof PaymentFailedEvent) {
-            return;
-        }
-        // Log the failure (e.g., with Monolog)
-        // logger()->error('Payment failed', ['message' => $event->message, 'context' => $event->context]);
+        // Write to a log file, database, or monitoring system
+        $logMessage = sprintf(
+            '[Payment Failed] %s | Context: %s',
+            $event->message,
+            json_encode($event->context)
+        );
+
+        // Use your preferred logger, e.g., Rhapsody's Logger
+        error_log($logMessage);
+
+        // Optionally, trigger a notification to the admin
+        // $this->mailer->send('admin@example.com', 'Payment failure', $logMessage);
     }
 }
