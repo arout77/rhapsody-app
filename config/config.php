@@ -67,6 +67,15 @@ return [
     'ddos_block_duration' => (int) ($_ENV['DDOS_BLOCK_DURATION'] ?? 300),
     'ddos_whitelist'      => explode(',', $_ENV['DDOS_WHITELIST'] ?? '127.0.0.100,::100'),
     'ddos_blacklist'      => explode(',', $_ENV['DDOS_BLACKLIST'] ?? ''),
+    'lazy'                => [
+        // Master toggle (overridden by env LAZY_LOADING_ENABLED)
+        'enabled' => filter_var($_ENV['LAZY_LOADING_ENABLED'] ?? true, FILTER_VALIDATE_BOOLEAN),
+        // List of services that should ALWAYS be instantiated eagerly.
+        'eager'   => [
+            // Add any user-defined services that should not be lazy.
+            // For example: \App\Services\PaymentGateway::class,
+        ],
+    ],
     'commands'            => [
         // Framework Core Engine System Commands
         \Rhapsody\Core\Commands\AuthInstallCommand::class,
@@ -86,5 +95,6 @@ return [
         \Rhapsody\Core\Commands\MakeReactCommand::class,
         \Rhapsody\Core\Commands\MakeEventCommand::class,
         \Rhapsody\Core\Commands\MakeListenerCommand::class,
+        \Rhapsody\Core\Commands\BuildProxiesCommand::class,
     ],
 ];

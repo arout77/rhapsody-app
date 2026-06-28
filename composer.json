@@ -12,7 +12,7 @@
         }
     ],
     "require": {
-        "php": "^8.3",
+        "php": "^8.4.1",
         "arout/rhapsody-core": "dev-main",
         "league/oauth2-client": "^2.0",
         "league/oauth2-google": "^3.0",
