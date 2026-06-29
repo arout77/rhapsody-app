@@ -2,7 +2,7 @@
 namespace Tests\Unit\Helpers;
 
 use Rhapsody\Core\Helpers\Path;
-use Tests\TestCase;
+use Rhapsody\Core\Testing\TestCase;
 
 class PathTest extends TestCase
 {
