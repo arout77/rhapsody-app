@@ -35,6 +35,7 @@ return [
         'dbname'   => $_ENV['DB_NAME'],
         'user'     => $_ENV['DB_USER'],
         'password' => $_ENV['DB_PASS'],
+        'driver'   => $_ENV['DB_DRIVER'] ?? 'mysql',
         'charset'  => 'utf8mb4',
     ],
     'mailer'              => [
