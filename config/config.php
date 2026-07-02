@@ -10,14 +10,15 @@
 return [
     'logging'             => [
         // Configuration details resolve dynamically utilizing your system settings
-        'php_error_log_path'    => 'C:\MAMP\logs\php_error.log',
-        'apache_error_log_path' => 'C:\MAMP\logs\apache_error.log',
+        'php_error_log_path'    => 'C:\wamp\logs\php_error.log',
+        'apache_error_log_path' => 'C:\wamp\logs\apache_error.log',
         'error_log_path'        => dirname(__DIR__) . '/storage/logs/errors.log',
     ],
     /**
      * The base URL of your application.
      */
     'base_url'            => $_ENV['APP_BASE_URL'] ?? '/',
+    'app_name'            => $_ENV['APP_NAME'] ?? 'Rhapsody PHP',
     'app_env'             => $_ENV['APP_ENV'] ?? 'production',
     'app_version'         => '', // bootstrap will set this
     'theme'               => $_ENV['APP_THEME'] ?? 'default',
@@ -76,26 +77,5 @@ return [
             // Add any user-defined services that should not be lazy.
             // For example: \App\Services\PaymentGateway::class,
         ],
-    ],
-    'commands'            => [
-        // Framework Core Engine System Commands
-        \Rhapsody\Core\Commands\AuthInstallCommand::class,
-        \Rhapsody\Core\Commands\MakeControllerCommand::class,
-        \Rhapsody\Core\Commands\MakeModelCommand::class,
-        \Rhapsody\Core\Commands\MakeMiddlewareCommand::class,
-        \Rhapsody\Core\Commands\MakeMigrationCommand::class,
-        \Rhapsody\Core\Commands\MigrateCommand::class,
-        \Rhapsody\Core\Commands\RouteCacheCommand::class,
-        \Rhapsody\Core\Commands\RouteClearCommand::class,
-        \Rhapsody\Core\Commands\CacheClearCommand::class,
-        \Rhapsody\Core\Commands\CacheWarmCommand::class,
-        \Rhapsody\Core\Commands\EnvSyncCommand::class,
-        \Rhapsody\Core\Commands\UpdateCommand::class,
-        \Rhapsody\Core\Commands\CheckVersionCommand::class,
-        \Rhapsody\Core\Commands\ReactInstallCommand::class,
-        \Rhapsody\Core\Commands\MakeReactCommand::class,
-        \Rhapsody\Core\Commands\MakeEventCommand::class,
-        \Rhapsody\Core\Commands\MakeListenerCommand::class,
-        \Rhapsody\Core\Commands\BuildProxiesCommand::class,
     ],
 ];
