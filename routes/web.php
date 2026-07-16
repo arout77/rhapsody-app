@@ -2,6 +2,7 @@
 
 use App\Controllers\ImageController;
 use App\Controllers\PageController;
+use App\Controllers\SitemapController;
 use App\Controllers\UserController;
 use App\Controllers\WebhookController;
 use App\Middleware\AuthMiddleware;
