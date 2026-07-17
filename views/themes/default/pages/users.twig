@@ -1,0 +1,24 @@
+{% extends "@core/layouts/main.twig" %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto py-12 px-4">
+    <h1 class="text-3xl font-bold mb-6">Users</h1>
+
+    {% if error %}
+        <p class="text-red-600">{{ error }}</p>
+    {% elseif users is empty %}
+        <p class="text-gray-600 dark:text-gray-400">No users found.</p>
+    {% else %}
+        <ul class="divide-y divide-gray-200 dark:divide-gray-700">
+            {% for user in users %}
+                <li class="py-3">
+                    <a href="{{ base_url }}/users/{{ user.user_id }}" class="text-indigo-600 hover:underline">
+                        {{ user.name }}
+                    </a>
+                    <span class="text-gray-500 text-sm"> — {{ user.email }}</span>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+</div>
+{% endblock %}

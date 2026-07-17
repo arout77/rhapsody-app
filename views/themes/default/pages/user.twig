@@ -1,0 +1,14 @@
+{% extends "@core/layouts/main.twig" %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto py-12 px-4">
+    {% if error %}
+        <p class="text-red-600">{{ error }}</p>
+    {% elseif user %}
+        <h1 class="text-3xl font-bold mb-2">{{ user.name }}</h1>
+        <p class="text-gray-500">{{ user.email }}</p>
+    {% else %}
+        <p class="text-gray-600 dark:text-gray-400">User not found.</p>
+    {% endif %}
+</div>
+{% endblock %}

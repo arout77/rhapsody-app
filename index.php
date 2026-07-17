@@ -57,70 +57,14 @@ $GLOBALS['container'] = $container;
 
 // 7. Use necessary core classes
 use Rhapsody\Core\Request;
-use Rhapsody\Core\Routing\Router;
 
 // 8. Create the Request object
 $request = new Request();
 
-// 9. Load the application routes from cache if available
-$routeCachePath = $rootPath . '/storage/cache/routes/routes.php';
-if (file_exists($routeCachePath) && $config['app_env'] === 'production') {
-    $routes = require_once $routeCachePath;
-    Router::setRoutes($routes);
-} else {
-    require_once $rootPath . '/routes/web.php';
-    require_once $rootPath . '/routes/api.php';
-}
-
-// 10. Load the middleware configuration and set it on the Router
-// Router::setMiddlewareConfig($config);
-Router::setMiddlewareConfig($config['middleware']);
-
-// 11. Dispatch the request through the router, passing the container
-try {
-    $response = Router::dispatch($request, $container);
-} catch (Rhapsody\Core\Exceptions\HttpException $e) {
-    // Let the error handler take over (it will render a custom error page)
-    throw $e;
-}
-
-// 12. Handle 404/500 responses if they are returned as Response objects (e.g., from middleware)
-if ($response->getStatusCode() === 404) {
-    throw new Rhapsody\Core\Exceptions\HttpException(404, 'Page not found');
-}
-if ($response->getStatusCode() === 500) {
-    throw new Rhapsody\Core\Exceptions\HttpException(500, 'Server error');
-}
-
-// 13. Get the matched route for debugging
-$matchedRoute = Router::getMatchedRoute();
-
-// --- INJECT DEBUG TOOLBAR ---
-if ($config['app_env'] === 'development' && $response->getStatusCode() >= 200 && $response->getStatusCode() < 300) {
-    $headers     = $response->getHeaders();
-    $contentType = $headers['Content-Type'] ?? 'text/html';
-
-    if (str_contains($contentType, 'text/html')) {
-        $debug = Rhapsody\Core\Debug::getInstance();
-        $debug->end($response, $config, $container, $matchedRoute);
-        $toolbar     = new Rhapsody\Core\Toolbar($debug->getData());
-        $toolbarHtml = $toolbar->render();
-
-        $content         = $response->getContent();
-        $bodyEndPosition = strripos($content, '</body>');
-        if ($bodyEndPosition !== false) {
-            $content = substr_replace($content, $toolbarHtml, $bodyEndPosition, 0);
-        } else {
-            $content .= $toolbarHtml;
-        }
-        $response->setContent($content);
-
-        // Inject update notifications if available
-        /** @var \App\Services\NotificationService $notificationService */
-        $notificationService = $container->resolve(\App\Services\NotificationService::class);
-        $response            = $notificationService->injectBanner($response);
-    }
-}
-
-// 14. Send the response back to the client
+// 9. Hand the request to the Kernel and send the resulting response.
+// Route loading and middleware configuration now happen once, at boot,
+// inside bootstrap.php — not here, and not per-request.
+$kernel   = new Rhapsody\Core\Kernel($container, $config);
+$response = $kernel->handle($request);
+$response = $kernel->terminate($request, $response);
 $response->send();
