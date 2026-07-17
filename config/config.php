@@ -51,10 +51,8 @@ return [
     'middleware'          => [
         // Route-specific middleware (key => class)
         'map'    => [
-            'auth'             => \Rhapsody\Core\Middleware\AuthMiddleware::class,
-            'guest'            => \Rhapsody\Core\Middleware\GuestMiddleware::class,
-            'updates'          => \Rhapsody\Core\Middleware\CheckUpdatesMiddleware::class,
-            'usertableexists'  => \Rhapsody\Core\Middleware\EnsureSchemaIsMigratedMiddleware::class,
+            'auth'  => \Rhapsody\Core\Middleware\AuthMiddleware::class,
+            'guest' => \Rhapsody\Core\Middleware\GuestMiddleware::class,
             // 'docs' was removed: it pointed at Rhapsody\Core\Middleware\DocsAccessMiddleware,
             // which doesn't exist anywhere in rhapsody-core. Add it back once that class exists.
         ],
