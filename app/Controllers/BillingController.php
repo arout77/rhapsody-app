@@ -1,11 +1,12 @@
 <?php
 namespace App\Controllers;
 
+use App\Events\PaymentFailedEvent;
+use App\Events\PaymentSucceededEvent;
+use Rhapsody\Core\Contracts\PaymentGatewayInterface;
 use Rhapsody\Core\Controllers\BaseBillingController;
 use Rhapsody\Core\Events\EventDispatcher;
-use Rhapsody\Core\Events\PaymentFailedEvent;
-use Rhapsody\Core\Events\PaymentSucceededEvent;
-use Rhapsody\Core\Http\Request;
+use Rhapsody\Core\Request;
 use Rhapsody\Core\Response;
 
 class BillingController extends BaseBillingController
@@ -33,6 +34,7 @@ class BillingController extends BaseBillingController
                 new PaymentSucceededEvent(
                     transactionId: $data['transaction_id'] ?? 'unknown',
                     amount: (float) $request->input('amount'),
+                    currency: $data['currency'] ?? 'USD',
                     metadata: ['order_id' => $request->input('order_id')]
                 )
             );

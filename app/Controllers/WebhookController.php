@@ -1,10 +1,10 @@
 <?php
 namespace App\Controllers;
 
+use App\Events\PaymentFailedEvent;
+use App\Events\PaymentSucceededEvent;
 use Rhapsody\Core\Controllers\BaseWebhookController;
 use Rhapsody\Core\Events\EventDispatcher;
-use Rhapsody\Core\Events\PaymentFailedEvent;
-use Rhapsody\Core\Events\PaymentSucceededEvent;
 use Rhapsody\Core\Request;
 use Rhapsody\Core\Response;
 use Stripe\WebhookSignature;

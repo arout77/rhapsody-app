@@ -1,26 +1,85 @@
 <?php
 namespace Tests\Unit;
 
-use Mockery;
 use Omnipay\Common\GatewayInterface;
 use Omnipay\Common\Message\ResponseInterface;
 use PHPUnit\Framework\TestCase;
 use Rhapsody\Core\Helpers\OmnipayGateway;
 
+/**
+ * A minimal fake of Omnipay's GatewayInterface.
+ *
+ * Omnipay gateways expose purchase()/authorize()/etc via __call() magic
+ * (they're not part of GatewayInterface itself — see vendor/omnipay/common's
+ * GatewayInterface, which only declares getName/getShortName/getParameters/
+ * initialize/getDefaultParameters). That means PHPUnit's mock builder can't
+ * stub purchase() directly on a GatewayInterface mock, so a small fake
+ * implementing the real interface is the simplest reliable way to test
+ * OmnipayGateway's use of purchase() without hitting a real payment API.
+ */
+class FakeOmnipayGateway implements GatewayInterface
+{
+    /** @var array<int, array> */
+    public array $purchaseCalls = [];
+    public $purchaseReturn;
+
+    public function getName()
+    {
+        return 'Fake';
+    }
+
+    public function getShortName()
+    {
+        return 'fake';
+    }
+
+    public function getDefaultParameters()
+    {
+        return [];
+    }
+
+    public function initialize(array $parameters = [])
+    {
+        return $this;
+    }
+
+    public function getParameters()
+    {
+        return [];
+    }
+
+    public function purchase(array $options = [])
+    {
+        $this->purchaseCalls[] = $options;
+        return $this->purchaseReturn;
+    }
+}
+
 class OmnipayGatewayTest extends TestCase
 {
-    protected $gatewayMock;
-    protected $paymentGateway;
+    protected FakeOmnipayGateway $gateway;
+    protected OmnipayGateway $paymentGateway;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        // Mock the Omnipay GatewayInterface
-        $this->gatewayMock = Mockery::mock(GatewayInterface::class);
+        $this->gateway        = new FakeOmnipayGateway();
+        $this->paymentGateway = new OmnipayGateway($this->gateway);
+    }
 
-        // Instantiate our helper with the mock
-        $this->paymentGateway = new OmnipayGateway($this->gatewayMock);
+    private function fakeRequest(ResponseInterface $response): object
+    {
+        return new class ($response) {
+            public function __construct(private ResponseInterface $response)
+            {
+            }
+
+            public function send(): ResponseInterface
+            {
+                return $this->response;
+            }
+        };
     }
 
     public function test_it_successfully_charges_a_payment(): void
@@ -28,28 +87,24 @@ class OmnipayGatewayTest extends TestCase
         $amount = 1000;
         $token  = 'tok_12345';
 
-        $responseMock = Mockery::mock(ResponseInterface::class);
-        $responseMock->shouldReceive('isSuccessful')->once()->andReturn(true);
-        $responseMock->shouldReceive('getTransactionReference')->once()->andReturn('tr_abc123');
+        $responseMock = $this->createMock(ResponseInterface::class);
+        $responseMock->method('isSuccessful')->willReturn(true);
+        $responseMock->method('getTransactionReference')->willReturn('tr_abc123');
 
-        $requestMock = Mockery::mock();
-        $requestMock->shouldReceive('send')->once()->andReturn($responseMock);
-
-        // Expect the purchase method to be called on the gateway with the correct payload
-        $this->gatewayMock->shouldReceive('purchase')
-            ->once()
-            ->with([
-                'amount'   => $amount,
-                'currency' => 'USD',
-                'token'    => $token,
-            ])
-            ->andReturn($requestMock);
+        $this->gateway->purchaseReturn = $this->fakeRequest($responseMock);
 
         $result = $this->paymentGateway->charge($amount, $token);
 
+        $this->assertSame([[
+            'amount'   => $amount,
+            'currency' => 'USD',
+            'token'    => $token,
+        ]], $this->gateway->purchaseCalls);
+
         $this->assertTrue($result['success']);
-        $this->assertEquals('tr_abc123', $result['transaction_id']);
-        $this->assertEquals('Payment approved.', $result['message']);
+        $this->assertSame('tr_abc123', $result['transaction_id']);
+        $this->assertSame('Payment approved.', $result['message']);
+        $this->assertSame('USD', $result['currency']);
     }
 
     public function test_it_handles_failed_charges(): void
@@ -57,26 +112,46 @@ class OmnipayGatewayTest extends TestCase
         $amount = 1000;
         $token  = 'tok_invalid';
 
-        $responseMock = Mockery::mock(ResponseInterface::class);
-        $responseMock->shouldReceive('isSuccessful')->once()->andReturn(false);
-        $responseMock->shouldReceive('getMessage')->once()->andReturn('Card declined');
+        $responseMock = $this->createMock(ResponseInterface::class);
+        $responseMock->method('isSuccessful')->willReturn(false);
+        $responseMock->method('getMessage')->willReturn('Card declined');
 
-        $requestMock = Mockery::mock();
-        $requestMock->shouldReceive('send')->once()->andReturn($responseMock);
-
-        $this->gatewayMock->shouldReceive('purchase')
-            ->once()
-            ->andReturn($requestMock);
+        $this->gateway->purchaseReturn = $this->fakeRequest($responseMock);
 
         $result = $this->paymentGateway->charge($amount, $token);
 
         $this->assertFalse($result['success']);
-        $this->assertEquals('Card declined', $result['message']);
+        $this->assertSame('Card declined', $result['message']);
+        $this->assertArrayNotHasKey('currency', $result);
     }
 
-    protected function tearDown(): void
+    public function test_it_uses_the_configured_default_currency(): void
     {
-        Mockery::close();
-        parent::tearDown();
+        $paymentGateway = new OmnipayGateway($this->gateway, 'EUR');
+
+        $responseMock = $this->createMock(ResponseInterface::class);
+        $responseMock->method('isSuccessful')->willReturn(true);
+        $responseMock->method('getTransactionReference')->willReturn('tr_eur1');
+
+        $this->gateway->purchaseReturn = $this->fakeRequest($responseMock);
+
+        $result = $paymentGateway->charge(1000, 'tok_12345');
+
+        $this->assertSame('EUR', $this->gateway->purchaseCalls[0]['currency']);
+        $this->assertSame('EUR', $result['currency']);
+    }
+
+    public function test_an_explicit_currency_option_overrides_the_default(): void
+    {
+        $responseMock = $this->createMock(ResponseInterface::class);
+        $responseMock->method('isSuccessful')->willReturn(true);
+        $responseMock->method('getTransactionReference')->willReturn('tr_gbp1');
+
+        $this->gateway->purchaseReturn = $this->fakeRequest($responseMock);
+
+        $result = $this->paymentGateway->charge(1000, 'tok_12345', ['currency' => 'GBP']);
+
+        $this->assertSame('GBP', $this->gateway->purchaseCalls[0]['currency']);
+        $this->assertSame('GBP', $result['currency']);
     }
 }

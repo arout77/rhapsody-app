@@ -1,5 +1,6 @@
 <?php
 
+use App\Controllers\BillingController;
 use App\Controllers\ImageController;
 use App\Controllers\PageController;
 use App\Controllers\SitemapController;
@@ -59,4 +60,5 @@ Router::post('/register', [AuthController::class, 'register'])
     ->middleware('guest');
 
 // --- Omnipay
+Router::post('/billing/charge', [BillingController::class, 'charge'])->middleware('auth');
 Router::post('/payment/webhook', [WebhookController::class, 'handle']);

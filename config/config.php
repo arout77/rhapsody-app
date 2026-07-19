@@ -75,7 +75,13 @@ return [
         // List of services that should ALWAYS be instantiated eagerly.
         'eager'   => [
             // Add any user-defined services that should not be lazy.
-            // For example: \App\Services\PaymentGateway::class,
         ],
+    ],
+    // Payment / Omnipay settings
+    'payment'             => [
+        // Which Omnipay gateway driver to use: 'Stripe' or 'PayPal_Rest'.
+        // Overridden by PAYMENT_GATEWAY in .env.
+        'gateway'  => $_ENV['PAYMENT_GATEWAY'] ?? 'Stripe',
+        'currency' => $_ENV['PAYMENT_CURRENCY'] ?? 'USD',
     ],
 ];
