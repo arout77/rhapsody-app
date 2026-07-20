@@ -55,6 +55,8 @@ return [
             'guest' => \Rhapsody\Core\Middleware\GuestMiddleware::class,
             // 'docs' was removed: it pointed at Rhapsody\Core\Middleware\DocsAccessMiddleware,
             // which doesn't exist anywhere in rhapsody-core. Add it back once that class exists.
+            // 'updates' now handled properly by NotificationService
+            // (web banner) and the app:check-version CLI command — both Packagist-based.
         ],
         // Global middleware (runs on every matched request)
         'global' => [
