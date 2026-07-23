@@ -3,7 +3,7 @@
 namespace App\Events;
 
 use App\Entities\User;
-use Core\Events\Event;
+use Rhapsody\Core\Event;
 
 /**
  * This event is dispatched when a new user successfully registers.

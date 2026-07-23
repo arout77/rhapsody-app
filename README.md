@@ -17,7 +17,7 @@ The framework's clean, decoupled architecture (thanks to features like the Event
 
 ### Requirements
 - Apache Server 2.4+
-- PHP 8.3 or newer
+- PHP 8.4.1 or newer
 - Any PDO compatible database
 - Composer package manager (https://getcomposer.org/)
 - SSH access to your server (optional, but recommended)

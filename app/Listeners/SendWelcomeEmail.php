@@ -3,14 +3,20 @@ namespace App\Listeners;
 
 use App\Events\UserRegistered;
 use Rhapsody\Core\Event;
-use Rhapsody\Core\Events\ListenerInterface;
 use Rhapsody\Core\Logger;
 use Rhapsody\Core\Mailer;
 
 /**
  * Handles sending a welcome email to a new user.
+ *
+ * Note: intentionally does not implement Rhapsody\Core\Events\ListenerInterface
+ * or Rhapsody\Core\Contracts\ListenerInterface - both currently reference a
+ * nonexistent 'Event' class in their own sub-namespace (a bug in the
+ * arout/rhapsody-core package), which fatal-errors on class load if
+ * implemented. EventDispatcher::dispatch() only requires a handle() method
+ * to exist, so this works fine without formally implementing the interface.
  */
-class SendWelcomeEmail implements ListenerInterface
+class SendWelcomeEmail
 {
     private Logger $logger;
 
