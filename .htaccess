@@ -8,9 +8,20 @@ RewriteEngine On
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(.*)/$ /$1 [L,R=301]
 
-# --- If the requested file or directory doesn't physically exist on the server...
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
+# --- Explicit allowlist of the ONLY parts of the project root that are
+# meant to be served as static files directly. Everything else in the
+# project root — .env, vendor/, storage/, a stray sitemap.xml someone
+# committed by accident, etc. — must NEVER be served this way, even
+# though the files physically exist on disk.
+#
+# Previously this fell through to a blanket "if the file exists, serve it"
+# rule.
+RewriteCond %{REQUEST_URI} ^/public/ [OR]
+RewriteCond %{REQUEST_URI} ^/favicon\.ico$
+RewriteCond %{REQUEST_FILENAME} -f
+RewriteRule ^ - [L]
 
-# --- ...then reroute the request to be handled by index.php
+# --- Everything else always routes through index.php, regardless of
+# whether a same-named file happens to exist at the project root. This is
+# what makes framework/module routes authoritative over the filesystem.
 RewriteRule ^ index.php [L]
