@@ -8,16 +8,25 @@ RewriteEngine On
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(.*)/$ /$1 [L,R=301]
 
-# --- Explicit allowlist of the ONLY parts of the project root that are
+# Explicit allowlist of the ONLY parts of the project root that are
 # meant to be served as static files directly. Everything else in the
 # project root — .env, vendor/, storage/, a stray sitemap.xml someone
 # committed by accident, etc. — must NEVER be served this way, even
 # though the files physically exist on disk.
 #
 # Previously this fell through to a blanket "if the file exists, serve it"
-# rule.
-RewriteCond %{REQUEST_URI} ^/public/ [OR]
-RewriteCond %{REQUEST_URI} ^/favicon\.ico$
+# rule (see below, now removed), which is what let /sitemap.xml bypass the
+# router entirely instead of reaching the SEO Toolkit module's route.
+#
+# No leading "^" anchor on the URI checks below: when the site is served
+# from a subdirectory (e.g. http://localhost/marketplace/...), REQUEST_URI
+# is "/marketplace/public/..." — anchoring to "^/public/" would never
+# match, and every asset in /public would 404 through the router instead
+# of being served as a static file. Matching "/public/" as a path segment
+# anywhere in the URI works whether the site is at a vhost root or nested
+# under a subdirectory alias.
+RewriteCond %{REQUEST_URI} /public/ [OR]
+RewriteCond %{REQUEST_URI} favicon\.ico$
 RewriteCond %{REQUEST_FILENAME} -f
 RewriteRule ^ - [L]
 
