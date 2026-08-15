@@ -86,4 +86,13 @@ return [
         'gateway'  => $_ENV['PAYMENT_GATEWAY'] ?? 'Stripe',
         'currency' => $_ENV['PAYMENT_CURRENCY'] ?? 'USD',
     ],
+    'ai'                  => [
+        'provider' => $_ENV['AI_PROVIDER'] ?? 'gemini',
+        'gemini'   => [
+            'api_key'         => $_ENV['GEMINI_API_KEY'] ?? '',
+            'model'           => $_ENV['GEMINI_MODEL'] ?? 'gemini-2.5-flash',
+            'timeout'         => (int) ($_ENV['GEMINI_TIMEOUT'] ?? 60),
+            'connect_timeout' => (int) ($_ENV['GEMINI_CONNECT_TIMEOUT'] ?? 5),
+        ],
+    ],
 ];
