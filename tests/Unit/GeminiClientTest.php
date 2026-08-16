@@ -6,6 +6,7 @@ use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
+use GuzzleHttp\Middleware;
 use GuzzleHttp\Psr7\Request as Psr7Request;
 use GuzzleHttp\Psr7\Response as Psr7Response;
 use PHPUnit\Framework\TestCase;
@@ -17,10 +18,20 @@ use Rhapsody\Core\Services\GeminiClient;
 
 class GeminiClientTest extends TestCase
 {
-    private function makeClient(array $mockResponses, array $config = []): GeminiClient
+    /**
+     * @param array $mockResponses
+     * @param array $config
+     * @param array|null $requestHistory Passed by reference — populated with
+     *   each outgoing request as ['request' => RequestInterface, ...] so
+     *   tests can inspect exactly what was sent, not just the mocked response.
+     */
+    private function makeClient(array $mockResponses, array $config = [], ?array &$requestHistory = null): GeminiClient
     {
+        $requestHistory = [];
         $mock = new MockHandler($mockResponses);
-        $httpClient = new Client(['handler' => HandlerStack::create($mock)]);
+        $stack = HandlerStack::create($mock);
+        $stack->push(Middleware::history($requestHistory));
+        $httpClient = new Client(['handler' => $stack]);
         return new GeminiClient($httpClient, array_merge(['api_key' => 'fake-key-for-test'], $config));
     }
 
@@ -159,5 +170,56 @@ class GeminiClientTest extends TestCase
 
         $this->expectException(AiTimeoutException::class);
         $client->generateContent('hi');
+    }
+
+    /**
+     * Regression test for a real bug: PHP's json_encode([]) produces a JSON
+     * array ('[]'), not an object ('{}') — there's no way to distinguish an
+     * empty associative array from an empty list. When no
+     * temperature/max_tokens/top_p/top_k were supplied anywhere,
+     * generationConfig ended up as an empty array and was sent as '[]',
+     * which Gemini's proto-based parser rejects (it requires an object
+     * there): "Unknown name 'generationConfig': Proto field is not
+     * repeating, cannot start list." The fix omits the key entirely when
+     * there's nothing to configure.
+     */
+    public function test_generationConfig_is_omitted_entirely_when_no_options_are_supplied(): void
+    {
+        $history = null;
+        $client = $this->makeClient([
+            new Psr7Response(200, [], json_encode([
+                'candidates' => [['content' => ['parts' => [['text' => 'hi']]], 'finishReason' => 'STOP']],
+            ])),
+        ], [], $history);
+
+        $client->generateContent('hello');
+
+        $sentBody = json_decode((string) $history[0]['request']->getBody(), true);
+        $this->assertArrayNotHasKey(
+            'generationConfig',
+            $sentBody,
+            'generationConfig must be omitted, not sent as an empty array, when no options are configured.'
+        );
+    }
+
+    public function test_generationConfig_is_sent_as_a_json_object_when_options_are_supplied(): void
+    {
+        $history = null;
+        $client = $this->makeClient([
+            new Psr7Response(200, [], json_encode([
+                'candidates' => [['content' => ['parts' => [['text' => 'hi']]], 'finishReason' => 'STOP']],
+            ])),
+        ], [], $history);
+
+        $client->generateContent('hello', ['temperature' => 0.9, 'max_tokens' => 500]);
+
+        $rawBody = (string) $history[0]['request']->getBody();
+        // An object serializes as '"generationConfig":{...}' — an (incorrectly
+        // empty-array-derived) list would instead be '"generationConfig":[...]'.
+        $this->assertStringContainsString('"generationConfig":{', $rawBody);
+
+        $sentBody = json_decode($rawBody, true);
+        $this->assertSame(0.9, $sentBody['generationConfig']['temperature']);
+        $this->assertSame(500, $sentBody['generationConfig']['maxOutputTokens']);
     }
 }
