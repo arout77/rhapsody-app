@@ -1,10 +1,12 @@
 <?php
 namespace App\Providers;
 
+use App\Events\AiModelUnavailableEvent;
 use App\Events\PaymentFailedEvent;
 use App\Events\PaymentSucceededEvent;
 use App\Events\UserRegistered;
 use App\Listeners\LogPaymentFailure;
+use App\Listeners\NotifyAdminOfModelIssue;
 use App\Listeners\SendPaymentConfirmationEmail;
 use App\Listeners\SendWelcomeEmail;
 use App\Listeners\UpdateOrderStatus;
@@ -26,6 +28,9 @@ class EventServiceProvider
         ],
         PaymentFailedEvent::class    => [
             LogPaymentFailure::class,
+        ],
+        AiModelUnavailableEvent::class => [
+            NotifyAdminOfModelIssue::class,
         ],
     ];
 

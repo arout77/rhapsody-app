@@ -1,6 +1,8 @@
 <?php
 
+use App\Controllers\AiController;
 use App\Controllers\BillingController;
+use App\Controllers\ChatController;
 use App\Controllers\ImageController;
 use App\Controllers\PageController;
 use App\Controllers\SitemapController;
@@ -26,21 +28,22 @@ Router::get('/auth/redirect/{provider}', [SocialAuthController::class, 'redirect
 
 Router::get('/', [PageController::class, 'index']);
 Router::get('/about', [PageController::class, 'about']);
-Router::get('/contact', [App\Controllers\PageController::class, 'contact']);
-Router::post('/contact', [App\Controllers\PageController::class, 'handleContact']);
+Router::get('/contact', [PageController::class, 'contact']);
+Router::post('/contact', [PageController::class, 'handleContact']);
 
-Router::get('/sitemap.xml', [SitemapController::class, 'generate']);
+// Router::get('/sitemap.xml', [SitemapController::class, 'generate']);
 
 Router::get('/logout', [AuthController::class, 'logout']);
 
 // This will match URLs like /posts/hello-world or /posts/123
+// Modify the showPost() method to suit your needs if using this
 Router::get('/posts/{slug}', [PageController::class, 'showPost']);
 
 // --- PROTECTED ROUTES ---
 // This route should only be accessible to authenticated users.
 Router::get('/dashboard', [PageController::class, 'dashboard'])->middleware('auth');
-Router::get('/upload', [App\Controllers\PageController::class, 'showUploadForm'])->middleware('auth');
-Router::post('/upload', [App\Controllers\PageController::class, 'handleUpload'])->middleware('auth');
+Router::get('/upload', [PageController::class, 'showUploadForm'])->middleware('auth');
+Router::post('/upload', [PageController::class, 'handleUpload'])->middleware('auth');
 Router::get('/users', [PageController::class, 'showUsers']);
 Router::get('/users/{user_id}', [PageController::class, 'viewUser']);
 
@@ -62,3 +65,7 @@ Router::post('/register', [AuthController::class, 'register'])
 // --- Omnipay
 Router::post('/billing/charge', [BillingController::class, 'charge'])->middleware('auth');
 Router::post('/payment/webhook', [WebhookController::class, 'handle']);
+
+// --- AI Chat
+Router::get('/chat', [ChatController::class, 'index'])->middleware('auth');
+Router::post('/ai/chat', [AiController::class, 'chat'])->middleware('auth');
