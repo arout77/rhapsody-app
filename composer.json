@@ -49,7 +49,9 @@
         "rhapsody": "@php vendor/bin/rhapsody",
         "post-root-package-install": [
             "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
-        ]
+        ],
+        "pre-update-cmd":  "Rhapsody\\Core\\Composer\\UpdateHooks::maintenanceOn",
+        "post-update-cmd": "Rhapsody\\Core\\Composer\\UpdateHooks::postUpdate"
     },
     "config": {
         "optimize-autoloader": true,
