@@ -6,7 +6,7 @@ RewriteEngine On
 
 # --- Redirect Trailing Slashes If Not a Folder (Good for Router consistency)
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^(.*)/$ /$1 [L,R=301]
+RewriteRule ^(.*)/$ $1 [L,R=301]
 
 # Explicit allowlist of the ONLY parts of the project root that are
 # meant to be served as static files directly. Everything else in the
