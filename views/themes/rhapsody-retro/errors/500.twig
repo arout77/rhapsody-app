@@ -1,0 +1,189 @@
+{% extends 'layouts/main.twig' %}
+
+{% block title %}500 - System Error{% endblock %}
+
+{% block content %}
+<style>
+    .rhapsody-error-container {
+        min-height: 70vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        box-sizing: border-box;
+    }
+    .rhapsody-error-card {
+        max-width: 480px;
+        width: 100%;
+        text-align: center;
+        margin: 0 auto;
+    }
+    .rhapsody-error-graphic-box {
+        position: relative;
+        width: 140px;
+        height: 140px;
+        margin: 0 auto 24px auto;
+    }
+    .rhapsody-error-graphic-box svg {
+        width: 100%;
+        height: 100%;
+        display: block;
+    }
+    .rhapsody-error-glow {
+        position: absolute;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: radial-gradient(circle, rgba(220,38,38,0.15) 0%, rgba(220,38,38,0) 70%);
+        border-radius: 50%;
+        z-index: 1;
+    }
+    .rhapsody-error-vector {
+        position: relative;
+        z-index: 2;
+        color: #dc2626;
+    }
+    .rhapsody-error-title {
+        font-size: 4rem;
+        font-weight: 800;
+        margin: 0;
+        letter-spacing: -0.05em;
+        background: linear-gradient(to right, #dc2626, #991b1b);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+    .rhapsody-error-subtitle {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #111827;
+        margin: 16px 0 8px 0;
+    }
+    .rhapsody-error-text {
+        font-size: 1rem;
+        color: #4b5563;
+        line-height: 1.5;
+        margin: 0 0 24px 0;
+    }
+    .rhapsody-error-actions {
+        display: flex;
+        gap: 12px;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+    .rhapsody-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 10px 20px;
+        font-weight: 500;
+        border-radius: 6px;
+        text-decoration: none;
+        transition: background 0.2s;
+        font-size: 0.95rem;
+    }
+    .rhapsody-btn-primary {
+        background-color: #dc2626;
+        color: #ffffff;
+    }
+    .rhapsody-btn-primary:hover {
+        background-color: #b91c1c;
+    }
+    .rhapsody-btn-secondary {
+        background-color: #e5e7eb;
+        color: #374151;
+    }
+    .rhapsody-btn-secondary:hover {
+        background-color: #d1d5db;
+    }
+    .rhapsody-btn svg {
+        width: 16px;
+        height: 16px;
+        margin-right: 8px;
+    }
+    .rhapsody-error-footer {
+        margin-top: 32px;
+        padding-top: 24px;
+        border-top: 1px solid #e5e7eb;
+    }
+    .rhapsody-error-footer p {
+        font-size: 0.85rem;
+        color: #6b7280;
+        margin: 0 0 12px 0;
+    }
+    .rhapsody-error-links {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 16px;
+        font-size: 0.875rem;
+    }
+    .rhapsody-error-links a {
+        color: #4b5563;
+        text-decoration: none;
+        font-weight: 500;
+    }
+    .rhapsody-error-links a:hover {
+        color: #dc2626;
+        text-decoration: underline;
+    }
+
+    @media (prefers-color-scheme: dark) {
+        .rhapsody-error-subtitle { color: #e5e7eb; }
+        .rhapsody-error-text { color: #9ca3af; }
+        .rhapsody-btn-secondary { background-color: #374151; color: #f3f4f6; }
+        .rhapsody-btn-secondary:hover { background-color: #4b5563; }
+        .rhapsody-error-footer { border-top-color: #374151; }
+        .rhapsody-error-links a { color: #9ca3af; }
+        .rhapsody-error-links a:hover { color: #f87171; }
+    }
+</style>
+
+<div class="rhapsody-error-container">
+    <div class="rhapsody-error-card">
+        
+        <div class="rhapsody-error-graphic-box">
+            <div class="rhapsody-error-glow"></div>
+            <svg class="rhapsody-error-vector" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+            </svg>
+        </div>
+
+        <h1 class="rhapsody-error-title">500</h1>
+        <h2 class="rhapsody-error-subtitle">Something went wrong</h2>
+        <p class="rhapsody-error-text">
+            An unexpected error occurred on our end. Our engineering team has been automatically notified and is looking into it.
+        </p>
+
+        <div class="rhapsody-error-actions">
+            <a href="{{ base_url }}/" class="rhapsody-btn rhapsody-btn-primary">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+                Return Home
+            </a>
+            <a href="{{ base_url }}/support" class="rhapsody-btn rhapsody-btn-secondary">
+                Contact Support
+            </a>
+        </div>
+
+        <div class="rhapsody-error-footer">
+            {# DYNAMIC CONDITIONAL BASE ON ENVIRONMENT SETTINGS #}
+            {% if config.app_env == 'development' %}
+                <p style="color: #b91c1c; font-weight: 600;">[ Local Development Engineering Rails ]</p>
+                <div class="rhapsody-error-links">
+                    <a href="{{ base_url }}/docs/architecture" target="_blank">Core Architecture Blueprint</a>
+                    <span>&bull;</span>
+                    <a href="{{ base_url }}/docs/routing" target="_blank">Routing Configuration</a>
+                    <span>&bull;</span>
+                    <a href="{{ base_url }}/docs/di-container" target="_blank">DI Service Recipes</a>
+                </div>
+            {% else %}
+                <p>Need immediate operational status updates?</p>
+                <div class="rhapsody-error-links">
+                    <a href="https://status.yourdomain.com" target="_blank" rel="noopener">System Status</a>
+                    <span>&bull;</span>
+                    <a href="{{ base_url }}/marketplace">Browse Extensions</a>
+                    <span>&bull;</span>
+                    <a href="{{ base_url }}/account/dashboard">Your Dashboard</a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

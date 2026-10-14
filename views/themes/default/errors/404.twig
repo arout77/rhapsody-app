@@ -1,0 +1,82 @@
+{% extends 'layouts/main.twig' %}
+
+{% block title %}404 - Page Not Found{% endblock %}
+
+{% block content %}
+<div class="min-h-[70vh] flex items-center justify-center px-4 sm:px-6 lg:px-8">
+    <div class="max-w-lg w-full text-center">
+        <!-- 404 Illustration / Icon -->
+        <div class="mb-8 flex justify-center">
+            <div class="relative">
+                <div class="absolute inset-0 flex items-center justify-center">
+                    <div class="w-32 h-32 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 opacity-20 blur-2xl"></div>
+                </div>
+                <div class="relative z-10">
+                    <svg class="w-32 h-32 text-indigo-500 dark:text-indigo-400 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- Error Code -->
+        <h1 class="text-8xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 dark:from-indigo-400 dark:via-purple-400 dark:to-pink-400 tracking-tight">
+            404
+        </h1>
+
+        <!-- Message -->
+        <h2 class="mt-4 text-2xl font-bold text-gray-800 dark:text-gray-200">
+            Oops! Page not found
+        </h2>
+        <p class="mt-2 text-gray-600 dark:text-gray-400">
+            The page you're looking for doesn't exist or has been moved.
+            <br class="hidden sm:block">
+            Maybe you followed a broken link or mistyped the URL.
+        </p>
+
+        <!-- Action Buttons -->
+        <div class="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
+            <a href="{{ base_url }}/" class="inline-flex items-center px-6 py-3 bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 text-white font-medium rounded-lg transition-colors duration-200 shadow-lg hover:shadow-xl">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+                </svg>
+                Go Home
+            </a>
+            <a href="{{ base_url }}/docs" class="inline-flex items-center px-6 py-3 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 font-medium rounded-lg transition-colors duration-200">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                </svg>
+                Documentation
+            </a>
+        </div>
+
+        <!-- Quick Links -->
+        <div class="mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
+            <p class="text-sm text-gray-500 dark:text-gray-400">Or visit one of these sections:</p>
+            <div class="mt-3 flex flex-wrap items-center justify-center gap-3 text-sm">
+                <a href="{{ base_url }}/docs/installation" class="text-indigo-600 dark:text-indigo-400 hover:underline">Installation</a>
+                <span class="text-gray-300 dark:text-gray-600">·</span>
+                <a href="{{ base_url }}/docs/routing" class="text-indigo-600 dark:text-indigo-400 hover:underline">Routing</a>
+                <span class="text-gray-300 dark:text-gray-600">·</span>
+                <a href="{{ base_url }}/docs/controllers" class="text-indigo-600 dark:text-indigo-400 hover:underline">Controllers</a>
+                <span class="text-gray-300 dark:text-gray-600">·</span>
+                <a href="{{ base_url }}/docs/doctrine" class="text-indigo-600 dark:text-indigo-400 hover:underline">Doctrine ORM</a>
+                <span class="text-gray-300 dark:text-gray-600">·</span>
+                <a href="{{ base_url }}/docs/views" class="text-indigo-600 dark:text-indigo-400 hover:underline">Views</a>
+            </div>
+        </div>
+
+        <!-- Optional: Search (if you have a search endpoint) -->
+        {#
+        <div class="mt-8 max-w-sm mx-auto">
+            <form action="{{ base_url }}/search" method="get" class="relative">
+                <input type="text" name="q" placeholder="Search docs..." class="w-full px-4 py-2 pl-10 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
+                <svg class="absolute left-3 top-2.5 w-5 h-5 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                </svg>
+            </form>
+        </div>
+        #}
+    </div>
+</div>
+{% endblock %}

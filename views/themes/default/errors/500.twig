@@ -1,0 +1,80 @@
+{% extends 'layouts/main.twig' %}
+
+{% block title %}500 - Internal Server Error{% endblock %}
+
+{% block content %}
+<div class="min-h-[75vh] flex flex-col items-center justify-center px-4 py-12 sm:px-6 lg:px-8">
+    <div class="max-w-md w-full text-center mx-auto space-y-8">
+        
+        <div class="flex justify-center">
+            <div class="relative w-32 h-32 flex items-center justify-center">
+                <div class="absolute inset-0 bg-red-500 rounded-full opacity-10 blur-xl animate-pulse"></div>
+                
+                <div class="relative z-10 w-full h-full text-red-500 dark:text-red-400">
+                    <svg class="w-full h-full" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.25" d="M5 4h14a1 1 0 011 1v3a1 1 0 01-1 1H5a1 1 0 01-1-1V5a1 1 0 011-1zm0 10h14a1 1 0 011 1v3a1 1 0 01-1 1H5a1 1 0 01-1-1v-3a1 1 0 011-1zM12 14v4M6 6h.01M6 16h.01M16 6h2M16 16h2"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 9v2m0 2h.01" stroke="#ef4444"></path>
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <div class="space-y-3">
+            <h1 class="text-7xl font-extrabold tracking-tight text-gray-900 dark:text-white sm:text-8xl">
+                500
+            </h1>
+            <h2 class="text-2xl font-bold tracking-tight text-gray-800 dark:text-gray-200 sm:text-3xl">
+                Internal Server Error
+            </h2>
+            <p class="text-base text-gray-600 dark:text-gray-400 max-w-xs mx-auto">
+                Something broke down inside the server request engine processing pipeline.
+            </p>
+        </div>
+
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
+            <a href="{{ base_url }}/" class="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-lg shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-150">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+                </svg>
+                Return Home
+            </a>
+            {% if config.app_env == 'development' %}
+                <a href="{{ base_url }}/docs" class="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3 border border-gray-300 dark:border-gray-700 text-base font-medium rounded-lg text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-150">
+                    Documentation
+                </a>
+            {% else %}
+                <a href="{{ base_url }}/support" class="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3 border border-gray-300 dark:border-gray-700 text-base font-medium rounded-lg text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-150">
+                    Report Bug
+                </a>
+            {% endif %}
+        </div>
+
+        <div class="pt-6 border-t border-gray-200 dark:border-gray-800">
+            {% if config.app_env == 'development' %}
+                <p class="text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500">
+                    Core Directories
+                </p>
+                <div class="mt-2 flex flex-wrap justify-center items-center gap-x-4 gap-y-2 text-sm">
+                    <a href="{{ base_url }}/docs/installation" class="text-blue-600 dark:text-blue-400 hover:underline">Installation</a>
+                    <span class="text-gray-300 dark:text-gray-700">&#8226;</span>
+                    <a href="{{ base_url }}/docs/routing" class="text-blue-600 dark:text-blue-400 hover:underline">Routing</a>
+                    <span class="text-gray-300 dark:text-gray-700">&#8226;</span>
+                    <a href="{{ base_url }}/docs/controllers" class="text-blue-600 dark:text-blue-400 hover:underline">Controllers</a>
+                </div>
+            {% else %}
+                <p class="text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500">
+                    Alternative Hubs
+                </p>
+                <div class="mt-2 flex flex-wrap justify-center items-center gap-x-4 gap-y-2 text-sm">
+                    <a href="{{ base_url }}/marketplace" class="text-blue-600 dark:text-blue-400 hover:underline">Marketplace</a>
+                    <span class="text-gray-300 dark:text-gray-700">&#8226;</span>
+                    <a href="https://status.yourdomain.com" target="_blank" rel="noopener" class="text-blue-600 dark:text-blue-400 hover:underline">Platform Status</a>
+                    <span class="text-gray-300 dark:text-gray-700">&#8226;</span>
+                    <a href="{{ base_url }}/explore" class="text-blue-600 dark:text-blue-400 hover:underline">Discover Features</a>
+                </div>
+            {% endif %}
+        </div>
+
+    </div>
+</div>
+{% endblock %}

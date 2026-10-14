@@ -1,0 +1,8 @@
+#!/usr/bin/env php
+<?php
+
+// 1. Load the application's autoloader so the runner can see app classes
+require __DIR__ . '/vendor/autoload.php';
+
+// 2. Hand off execution directly to the core framework runner
+require __DIR__ . '/vendor/arout/rhapsody-core/bin/rhapsody';
