@@ -8,12 +8,15 @@
     "authors": [
         {
             "name": "Andrew Rout",
-            "email": "arout@rhapsodyframework.com"
+            "email": "andrew@rhapsody-framework.com"
         }
     ],
     "require": {
         "php": "^8.4.1",
         "arout/rhapsody-core": "dev-main",
+        "arout/rhapsody-forms": "^1.0",
+        "arout/rhapsody-roadrunner": "^1.0",
+        "arout/seo-toolkit-pro": "^1.0",
         "league/glide": "^3.2",
         "league/oauth2-client": "^2.0",
         "league/oauth2-facebook": "^2.0",
@@ -45,7 +48,8 @@
             "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
         ],
         "pre-update-cmd":  "Rhapsody\\Core\\Composer\\UpdateHooks::maintenanceOn",
-        "post-update-cmd": "Rhapsody\\Core\\Composer\\UpdateHooks::postUpdate"
+        "post-update-cmd": "Rhapsody\\Core\\Composer\\UpdateHooks::postUpdate",
+        "analyse": "phpstan analyse -c phpstan.neon --memory-limit=1G"
     },
     "config": {
         "optimize-autoloader": true,

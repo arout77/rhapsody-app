@@ -31,10 +31,6 @@ Router::get('/about', [PageController::class, 'about']);
 Router::get('/contact', [PageController::class, 'contact']);
 Router::post('/contact', [PageController::class, 'handleContact']);
 
-// Router::get('/sitemap.xml', [SitemapController::class, 'generate']);
-
-Router::get('/logout', [AuthController::class, 'logout']);
-
 // This will match URLs like /posts/hello-world or /posts/123
 // Modify the showPost() method to suit your needs if using this
 Router::get('/posts/{slug}', [PageController::class, 'showPost']);
@@ -53,18 +49,16 @@ Router::get('/login', [AuthController::class, 'showLoginForm'])
     ->middleware('guest');
 
 Router::post('/login', [AuthController::class, 'login'])
-    ->middleware('usertableexists')
     ->middleware('guest');
 Router::get('/register', [AuthController::class, 'showRegisterForm'])
-    ->middleware('usertableexists')
     ->middleware('guest');
 Router::post('/register', [AuthController::class, 'register'])
-    ->middleware('usertableexists')
     ->middleware('guest');
+Router::get('/logout', [AuthController::class, 'logout']);
 
 // --- Omnipay
 Router::post('/billing/charge', [BillingController::class, 'charge'])->middleware('auth');
-Router::post('/payment/webhook', [WebhookController::class, 'handle']);
+Router::post('/payment/webhook', [WebhookController::class, 'handle'])->middleware('auth');
 
 // --- AI Chat
 Router::get('/chat', [ChatController::class, 'index'])->middleware('auth');

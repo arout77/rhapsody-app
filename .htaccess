@@ -34,3 +34,21 @@ RewriteRule ^ - [L]
 # whether a same-named file happens to exist at the project root. This is
 # what makes framework/module routes authoritative over the filesystem.
 RewriteRule ^ index.php [L]
+
+# Enable Gzip compression
+<IfModule mod_deflate.so>
+    # Compress HTML, CSS, JavaScript, Text, XML and JSON
+    AddOutputFilterByType DEFLATE text/html
+    AddOutputFilterByType DEFLATE text/plain
+    AddOutputFilterByType DEFLATE text/xml
+    AddOutputFilterByType DEFLATE text/css
+    AddOutputFilterByType DEFLATE application/javascript
+    AddOutputFilterByType DEFLATE application/x-javascript
+    AddOutputFilterByType DEFLATE application/json
+    AddOutputFilterByType DEFLATE application/xml
+    AddOutputFilterByType DEFLATE application/xhtml+xml
+    AddOutputFilterByType DEFLATE image/svg+xml
+
+    # Ensure proxies don't deliver the wrong content to non-compressed browsers
+    Header append Vary User-Agent env=!dont-vary
+</IfModule>
