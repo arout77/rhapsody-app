@@ -1,11 +1,10 @@
 <?php
-
 namespace App\Controllers;
 
 use App\Models\User;
-use Core\BaseController;
-use Core\Request;
-use Core\Response;
+use Rhapsody\Core\BaseController;
+use Rhapsody\Core\Request;
+use Rhapsody\Core\Response;
 
 /**
  * Handles all API requests for the application.
@@ -20,22 +19,21 @@ class ApiController extends BaseController
         $userModel = new User();
         $users     = $userModel->findAll();
 
-        return $this->json( $users );
+        return $this->json($users);
     }
 
     /**
      * Returns a single user by their ID, or a 404 error if not found.
      */
-    public function getUser( Request $request, string $userId ): Response
+    public function getUser(Request $request, string $userId): Response
     {
         $userModel = new User();
-        $user      = $userModel->getUserById( $userId );
+        $user      = $userModel->getUserById($userId);
 
-        if ( !$user )
-        {
-            return $this->json( ['error' => 'User not found.'], 404 );
+        if (! $user) {
+            return $this->json(['error' => 'User not found.'], 404);
         }
 
-        return $this->json( $user );
+        return $this->json($user);
     }
 }
