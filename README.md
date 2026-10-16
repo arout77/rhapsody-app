@@ -40,8 +40,12 @@ Rhapsody prioritizes application security out of the box so client projects rema
 Stop re-inventing asset pipelines for every client site. Rhapsody comes equipped with:
 - Automated WebP/AVIF image generation & responsive sizing
 - Signed upload handlers & CSRF-protected file management
-- Built-in SEO metadata and schema generators
 - Flexible ORM options: Doctrine ORM or lightweight PDO `BaseModel`
+
+### 🔍 Optimized for SEO Out of the Box
+Maximal search visibility and social sharing performance delivered natively:
+- **`SeoHelper` Utility:** Fluent generation of Open Graph tags, Twitter Card metadata, canonical URLs, and dynamic page titles.
+- **Schema.org Structured Data Tools:** Built-in generators for JSON-LD schema (Article, BreadcrumbList, Organization, Product, LocalBusiness) to boost rich snippet presence in search engine results pages.
 
 ### 🏝️ Hybrid View Engine: Twig SSR + React Islands
 Render lightning-fast server-side views using Twig, and seamlessly mount interactive **React Islands** directly inside your templates—or build full Single Page Applications (SPAs) without complex build setups or front-end fragmentation.
@@ -117,6 +121,8 @@ namespace App\Controllers;
 
 use App\Models\User;
 use Rhapsody\Core\BaseController;
+use Rhapsody\Core\Http\Request;
+use Rhapsody\Core\Http\Response;
 
 // Your controller with automatic dependency injection
 class UserController extends BaseController
@@ -156,12 +162,11 @@ Finally, the Twig view file:
 <div class="max-w-3xl mx-auto py-12 px-4">
     <h1 class="text-3xl font-bold mb-4">About</h1>
     <p class="text-gray-600 dark:text-gray-400">
-        Welcome, {{ user.name }}. We sent a verification email to you at {{ user.email_address )).
-        Please respond in order to activate your account
+        Welcome, {{ user.name }}. We sent a verification email to you at {{ user.email_address }}.
+        Please respond in order to activate your account.
     </p>
 </div>
 {% endblock %}
-
 ```
 
 ---
