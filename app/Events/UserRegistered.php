@@ -1,9 +1,8 @@
 <?php
-
 namespace App\Events;
 
 use App\Entities\User;
-use Rhapsody\Core\Event;
+use Rhapsody\Core\Events\Event;
 
 /**
  * This event is dispatched when a new user successfully registers.

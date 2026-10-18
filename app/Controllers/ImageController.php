@@ -1,8 +1,8 @@
 <?php
 namespace App\Controllers;
 
-use League\Glide\ServerFactory;
 use League\Glide\Filesystem\FileNotFoundException;
+use League\Glide\ServerFactory;
 use League\Glide\Signatures\SignatureException;
 use Rhapsody\Core\BaseController;
 use Rhapsody\Core\Helpers\ImageSigner;
@@ -19,7 +19,9 @@ class ImageController extends BaseController
      */
     private const MAX_IMAGE_PIXELS = 4_000_000;
 
-    /** Fallback MIME types, keyed by source file extension. */
+    /**
+     * Fallback MIME types, keyed by source file extension.
+     */
     private const MIME_TYPES = [
         'webp' => 'image/webp',
         'jpg'  => 'image/jpeg',
@@ -74,11 +76,12 @@ class ImageController extends BaseController
             'max_image_size' => self::MAX_IMAGE_PIXELS,
         ]);
 
-        // Glide keys its cache by source path + the exact manipulation params,
-        // so this returns the variant matching THESE params, generating and
-        // caching it first if it doesn't exist yet.
+        // Glide keys its cache by source path + the exact manipulation params.
+        // makeImage() returns the cache path of the variant matching THESE
+        // params, generating and caching it first if it doesn't exist yet.
         try {
-            $imageContent = $server->getImageAsString($path, $params);
+            $cacheKey     = $server->makeImage($path, $params);
+            $imageContent = $server->getCache()->read($cacheKey);
         } catch (FileNotFoundException) {
             return $this->errorResponse('Image not found', 404);
         }

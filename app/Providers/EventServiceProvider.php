@@ -30,6 +30,9 @@ class EventServiceProvider
             SendPaymentConfirmationEmail::class,
             UpdateOrderStatus::class,
         ],
+        PaymentSucceededEvent::class   => [
+            RecordMarketplacePurchaseFromWebhook::class,
+        ],
         PaymentFailedEvent::class      => [
             LogPaymentFailure::class,
         ],

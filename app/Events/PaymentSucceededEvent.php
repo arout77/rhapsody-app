@@ -6,6 +6,9 @@ namespace App\Events;
  */
 class PaymentSucceededEvent
 {
+    /**
+     * @param array<string, mixed> $metadata Gateway metadata (e.g. Stripe metadata)
+     */
     public function __construct(
         public readonly string $transactionId,
         public readonly float $amount,
