@@ -15,7 +15,7 @@ class UpdateOrderStatus
         // Assuming the metadata contains 'order_id'
         $orderId = $event->metadata['order_id'] ?? null;
 
-        if ($orderId) {
+        if (is_scalar($orderId) && (string) $orderId !== '') {
             // Fetch the order entity and update its status
             // $order = $this->em->getRepository(Order::class)->find($orderId);
             // if ($order) {

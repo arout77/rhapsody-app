@@ -20,7 +20,7 @@ class EventServiceProvider
     /**
      * The event listener mappings for the application.
      *
-     * @var array
+     * @var array<class-string, list<class-string>>
      */
     protected array $listen = [
         UserRegistered::class          => [
@@ -29,9 +29,6 @@ class EventServiceProvider
         PaymentSucceededEvent::class   => [
             SendPaymentConfirmationEmail::class,
             UpdateOrderStatus::class,
-        ],
-        PaymentSucceededEvent::class   => [
-            RecordMarketplacePurchaseFromWebhook::class,
         ],
         PaymentFailedEvent::class      => [
             LogPaymentFailure::class,
@@ -57,7 +54,7 @@ class EventServiceProvider
     ];
 
     /**
-     * @return mixed
+     * @return array<class-string, list<class-string>>
      */
     public function getListeners(): array
     {

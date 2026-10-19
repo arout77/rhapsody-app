@@ -4,6 +4,7 @@ namespace App\Listeners;
 use App\Events\AiModelUnavailableEvent;
 use Rhapsody\Core\Cache;
 use Rhapsody\Core\Mailer;
+use Rhapsody\Core\Support\Env;
 
 /**
  * Emails the configured admin when a Gemini model becomes invalid,
@@ -26,8 +27,8 @@ class NotifyAdminOfModelIssue
 
     public function handle(AiModelUnavailableEvent $event): void
     {
-        $to = $_ENV['MAIL_ADMIN_EMAIL'] ?? null;
-        if (! $to) {
+        $to = Env::get('MAIL_ADMIN_EMAIL');
+        if ($to === null || $to === '') {
             error_log('NotifyAdminOfModelIssue: MAIL_ADMIN_EMAIL is not set — cannot send alert.');
             return;
         }

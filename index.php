@@ -68,3 +68,4 @@ $kernel   = new Rhapsody\Core\Kernel($container, $config);
 $response = $kernel->handle($request);
 $response = $kernel->terminate($request, $response);
 $response->send();
+$kernel->afterResponse();

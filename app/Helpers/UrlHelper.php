@@ -3,35 +3,33 @@ namespace App\Helpers;
 
 class UrlHelper
 {
+    private const string FALLBACK = 'n-a';
+
     /**
      * Converts a raw title into a URL-safe slug.
      * Example: "1 & 2 Samuel: King David's Reign!" -> "1-2-samuel-king-davids-reign"
      */
     public static function slugify(string $text): string
     {
-        // Replace ampersands with 'and' if preferred, or just remove them
         $text = str_replace('&', 'and', $text);
 
-        // Replace non-letter or digits by a single dash
-        $text = preg_replace('~[^\pL\d]+~u', '-', $text);
+        // Replace non-letter or digits by a single dash (null on invalid UTF-8)
+        $slug = preg_replace('~[^\pL\d]+~u', '-', $text);
 
-        // Transliterate to ASCII characters if any accents exist
-        $text = iconv('utf-8', 'us-ascii//TRANSLIT', $text);
-
-        // Remove unwanted characters
-        $text = preg_replace('~[^-\w]+~', '', $text);
-
-        // Trim duplicate or trailing dashes
-        $text = trim($text, '-');
-        $text = preg_replace('~-+~', '-', $text);
-
-        // Downcase
-        $text = strtolower($text);
-
-        if (empty($text)) {
-            return 'n-a';
+        if ($slug === null) {
+            return self::FALLBACK;
         }
 
-        return $text;
+        // Transliterate to ASCII characters if any accents exist (false on failure)
+        $ascii = iconv('utf-8', 'us-ascii//TRANSLIT', $slug);
+        $slug  = $ascii === false ? $slug : $ascii;
+
+        // Remove unwanted characters, then trim and collapse dashes
+        $slug = preg_replace('~[^-\w]+~', '', $slug) ?? '';
+        $slug = preg_replace('~-+~', '-', trim($slug, '-')) ?? '';
+        $slug = strtolower($slug);
+
+        // === '' rather than empty(): empty() would also reject a title of "0"
+        return $slug === '' ? self::FALLBACK : $slug;
     }
 }

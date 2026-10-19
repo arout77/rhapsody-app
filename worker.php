@@ -64,4 +64,5 @@ while ($psrRequest = $psr7Worker->waitRequest()) {
         // RoadRunner rather than letting it kill the worker silently.
         $psr7Worker->getWorker()->error((string) $e);
     }
+    $kernel->afterResponse();
 }
