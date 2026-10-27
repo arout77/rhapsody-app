@@ -1,41 +1,28 @@
-# --- Enable the URL rewriting engine
+<IfModule mod_rewrite.c>
+<IfModule mod_negotiation.c>
+Options -MultiViews -Indexes
+</IfModule>
+Options +FollowSymLinks
 RewriteEngine On
+# RewriteBase /
 
-# --- Optional: If your site is in a subdirectory, uncomment and set it here
-# RewriteBase /my-awesome-app/
+# Block access to any file or directory starting with a dot, returning a 404
+RewriteRule (^|/)\. - [R=404,L]
 
-# --- Redirect Trailing Slashes If Not a Folder (Good for Router consistency)
+# Handle Authorization Header
+RewriteCond %{HTTP:Authorization} .
+RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
+# Redirect Trailing Slashes If Not A Folder...
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^(.*)/$ $1 [L,R=301]
+RewriteCond %{REQUEST_URI} (.+)/$
+RewriteRule ^ %1 [L,R=301]
 
-# Explicit allowlist of the ONLY parts of the project root that are
-# meant to be served as static files directly. Everything else in the
-# project root — .env, vendor/, storage/, a stray sitemap.xml someone
-# committed by accident, etc. — must NEVER be served this way, even
-# though the files physically exist on disk.
-#
-# Previously this fell through to a blanket "if the file exists, serve it"
-# rule (see below, now removed), which is what let /sitemap.xml bypass the
-# router entirely instead of reaching the SEO Toolkit module's route.
-#
-# No leading "^" anchor on the URI checks below: when the site is served
-# from a subdirectory (e.g. http://localhost/marketplace/...), REQUEST_URI
-# is "/marketplace/public/..." — anchoring to "^/public/" would never
-# match, and every asset in /public would 404 through the router instead
-# of being served as a static file. Matching "/public/" as a path segment
-# anywhere in the URI works whether the site is at a vhost root or nested
-# under a subdirectory alias.
-RewriteCond %{REQUEST_URI} /public/ [OR]
-RewriteCond %{REQUEST_URI} favicon\.ico$
-RewriteCond %{REQUEST_FILENAME} -f
-RewriteRule ^ - [L]
-
-# --- Everything else always routes through index.php, regardless of
-# whether a same-named file happens to exist at the project root. This is
-# what makes framework/module routes authoritative over the filesystem.
+# Handle Front Controller...
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule ^ index.php [L]
 
-# Enable Gzip compression
 <IfModule mod_deflate.so>
     # Compress HTML, CSS, JavaScript, Text, XML and JSON
     AddOutputFilterByType DEFLATE text/html
