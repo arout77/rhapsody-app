@@ -2,57 +2,53 @@
 
 declare (strict_types = 1);
 
+use Rhapsody\Core\Support\Env;
+
 require_once __DIR__ . '/vendor/autoload.php';
 
 Dotenv\Dotenv::createImmutable(__DIR__)->safeLoad();
 
-/**
- * Read an environment value, falling back to a default when unset or empty.
- */
-$env = static function (string $key, string $default = ''): string {
-    $value = $_ENV[$key] ?? getenv($key);
-
-    return is_string($value) && $value !== '' ? $value : $default;
-};
-
-$driver = strtolower($env('DB_DRIVER', 'mysql'));
-
-$adapter = match ($driver) {
-    'mysql', 'mariadb'  => 'mysql',
+$adapter = match (strtolower(Env::string('DB_DRIVER', 'mysql'))) {
+    'mysql', 'mariadb' => 'mysql',
     'pgsql', 'postgres', 'postgresql' => 'pgsql',
     'sqlsrv', 'sqlserver', 'mssql'    => 'sqlsrv',
-    'sqlite', 'sqlite3' => 'sqlite',
-    default => throw new RuntimeException("Unsupported DB_DRIVER '{$driver}'."),
+    'sqlite' => 'sqlite',
+    default  => throw new RuntimeException(
+        'Unsupported DB_DRIVER "' . Env::string('DB_DRIVER') . '". Use mysql, pgsql, sqlsrv or sqlite.'
+    ),
 };
 
-$name = $env('DB_NAME');
+$required = $adapter === 'sqlite' ? ['DB_NAME'] : ['DB_HOST', 'DB_NAME', 'DB_USER'];
+$missing  = array_values(array_filter($required, static fn(string $key): bool => Env::string($key) === ''));
 
-/**
- * @var array<string, mixed> $connection
- */
-$connection = ['adapter' => $adapter];
+if ($missing !== []) {
+    throw new RuntimeException(
+        'Cannot run migrations: missing ' . implode(', ', $missing) . ' in .env.'
+    );
+}
 
-if ($adapter === 'sqlite') {
-    $isAbsolute = preg_match('#^(?:[A-Za-z]:[\\\\/]|[\\\\/])#', $name) === 1;
+$defaultPort = match ($adapter) {
+    'pgsql'  => 5432,
+    'sqlsrv' => 1433,
+    default  => 3306,
+};
 
-    $connection['name']   = $isAbsolute ? $name : __DIR__ . '/' . $name;
-    $connection['suffix'] = ''; // Phinx appends ".sqlite3" by default; use the exact path instead.
-} else {
-    $connection['host'] = $env('DB_HOST', '127.0.0.1');
-    $connection['name'] = $name;
-    $connection['user'] = $env('DB_USER');
-    $connection['pass'] = $env('DB_PASS');
-    $connection['port'] = (int) $env('DB_PORT', match ($adapter) {
-        'pgsql'  => '5432',
-        'sqlsrv' => '1433',
-        default  => '3306',
-    });
+$connection = [
+    'adapter' => $adapter,
+    'name'    => Env::string('DB_NAME'),
+];
 
-    if ($adapter === 'mysql') {
-        $connection['charset'] = 'utf8mb4';
-    } elseif ($adapter === 'pgsql') {
-        $connection['charset'] = 'utf8';
-    }
+if ($adapter !== 'sqlite') {
+    $connection += [
+        'host' => Env::string('DB_HOST'),
+        'user' => Env::string('DB_USER'),
+        'pass' => Env::string('DB_PASS'),
+        'port' => Env::int('DB_PORT', $defaultPort),
+    ];
+}
+
+if ($adapter === 'mysql') {
+    $connection['charset'] = 'utf8mb4';
 }
 
 return [
