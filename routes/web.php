@@ -10,6 +10,7 @@ use App\Controllers\UserController;
 use App\Controllers\WebhookController;
 use App\Middleware\AuthMiddleware;
 use App\Middleware\GuestMiddleware;
+use Rhapsody\Core\Controllers\AskController;
 use Rhapsody\Core\Controllers\AuthController;
 use Rhapsody\Core\Controllers\DocsController;
 use Rhapsody\Core\Controllers\SocialAuthController;
@@ -61,5 +62,5 @@ Router::post('/billing/charge', [BillingController::class, 'charge'])->middlewar
 Router::post('/payment/webhook', [WebhookController::class, 'handle'])->middleware('auth');
 
 // --- AI Chat
-Router::get('/chat', [ChatController::class, 'index'])->middleware('auth');
-Router::post('/ai/chat', [AiController::class, 'chat'])->middleware('auth');
+Router::get('/chat', [AskController::class, 'index']);
+Router::post('/chat/query', [AskController::class, 'query']);

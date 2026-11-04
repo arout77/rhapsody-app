@@ -222,4 +222,35 @@ class GeminiClientTest extends TestCase
         $this->assertSame(0.9, $sentBody['generationConfig']['temperature']);
         $this->assertSame(500, $sentBody['generationConfig']['maxOutputTokens']);
     }
+
+    public function test_the_system_option_is_sent_as_a_system_instruction(): void
+    {
+        $history = null;
+        $client = $this->makeClient([
+            new Psr7Response(200, [], json_encode([
+                'candidates' => [['content' => ['parts' => [['text' => 'hi']]], 'finishReason' => 'STOP']],
+            ])),
+        ], [], $history);
+
+        $client->generateContent('hello', ['system' => 'Answer only from the docs.']);
+
+        $sentBody = json_decode((string) $history[0]['request']->getBody(), true);
+        $this->assertSame('Answer only from the docs.', $sentBody['systemInstruction']['parts'][0]['text']);
+        $this->assertSame('hello', $sentBody['contents'][0]['parts'][0]['text']);
+    }
+
+    public function test_systemInstruction_is_omitted_when_no_system_option_is_given(): void
+    {
+        $history = null;
+        $client = $this->makeClient([
+            new Psr7Response(200, [], json_encode([
+                'candidates' => [['content' => ['parts' => [['text' => 'hi']]], 'finishReason' => 'STOP']],
+            ])),
+        ], [], $history);
+
+        $client->generateContent('hello');
+
+        $sentBody = json_decode((string) $history[0]['request']->getBody(), true);
+        $this->assertArrayNotHasKey('systemInstruction', $sentBody);
+    }
 }
