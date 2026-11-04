@@ -12,6 +12,7 @@ use Rhapsody\Core\Bootstrap\ServiceRegistrar;
  * ViewRenderer and Validator. Other core bindings are locked.
  */
 return static function (ServiceRegistrar $services): void {
+    // Examples:
     // $services->singleton(App\Services\Billing::class);
     // $services->bind(Rhapsody\Core\Mailer::class, fn () => new App\Mail\CustomMailer());
 };
