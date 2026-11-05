@@ -84,6 +84,19 @@ return [
         'gateway'  => Env::string('PAYMENT_GATEWAY', 'Stripe'),
         'currency' => Env::string('PAYMENT_CURRENCY', 'USD'),
     ],
+    // Per-request debug snapshots (development only). See Rhapsody\Core\Snapshot.
+    'debug'               => [
+        'snapshots' => [
+            'enabled'         => Env::bool('DEBUG_SNAPSHOTS', true),
+            'keep'            => Env::int('DEBUG_SNAPSHOTS_KEEP', 25),
+            'max_body_bytes'  => 8192,
+            'max_queries'     => 100,
+            'log_lines'       => 20,
+            'redact_keys'     => [],
+            'env_allowlist'   => [],
+            'ignore_prefixes' => ['/img/'],
+        ],
+    ],
     'ai'                  => [
         'provider' => Env::string('AI_PROVIDER', 'gemini'),
         'gemini'   => [

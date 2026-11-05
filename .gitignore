@@ -1,4 +1,5 @@
 /.phpintel
 /storage/cache/twig
 /storage/logs
+/storage/debug
 app/Controllers/BillingController.php
