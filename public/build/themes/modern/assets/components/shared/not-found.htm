@@ -1,0 +1,154 @@
+<!-- 404 not found  -->
+
+<section class="pt-29 pb-24 md:pb-29 lg:pt-39 lg:pb-36 xl:pb-39">
+  <div class="main-container space-y-14 md:space-y-24 lg:space-y-36 xl:space-y-39">
+    <div
+      class="border-stroke-3/11 bg-background-5 group relative w-full rounded-xl border px-8 py-24 md:py-29 lg:py-39"
+    >
+      <div class="space-y-6 text-center md:space-y-10 lg:space-y-14">
+        <div class="space-y-6">
+          <h2
+            class="font-sora text-[100px] leading-[120%] font-normal text-white/90 md:text-[150px] lg:text-[175px] xl:text-[200px]"
+          >
+            404
+          </h2>
+
+          <div class="space-y-3">
+            <h3
+              class="font-sora text-sora-heading-4 md:text-sora-heading-3 lg:text-sora-heading-2 mx-auto max-w-[300px] font-normal text-white/90"
+            >
+              Oops! Page Not Found
+            </h3>
+            <p class="font-inter-tight text-tagline-2 mx-auto max-w-[300px] text-white/50">
+              The page doesn't exist or was moved. Don't worry, we'll guide you back.
+            </p>
+          </div>
+        </div>
+
+        <Component
+          src="src/components/shared/button/button-primary.htm"
+          button-text="Go back home"
+          href="/"
+          class="inline-block"
+        />
+      </div>
+    </div>
+    <div class="space-y-6">
+      <div class="space-y-1 text-center">
+        <h2
+          data-opai-text-reveal
+          data-word-delay="0.1"
+          data-word-rotation-x="120"
+          data-word-offset-y="50"
+          class="text-sora-heading-4 md:text-sora-heading-3 lg:text-sora-heading-2 font-normal text-white/90"
+        >
+          Helpful Links
+        </h2>
+
+        <p
+          data-opai-text-reveal
+          data-delay="0.2"
+          data-word-delay="0.01"
+          data-word-offset-y="42"
+          data-word-rotation-x="10"
+          class="font-inter-tight text-tagline-2 font-normal text-white/60"
+        >
+          The page doesn’t exist or was moved. Don’t worry, we’ll guide you back.
+        </p>
+      </div>
+      <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+        <!-- card 01: Home -->
+        <div
+          class="bg-background-5 flex flex-col justify-between space-y-14 rounded-lg p-6 md:p-8"
+          data-opai-animate
+          data-delay="0.1"
+        >
+          <div class="space-y-6">
+            <span class="ns-shape-40 inline-block text-4xl text-white"></span>
+            <h4 class="font-inter-tight text-tagline-2 block font-normal text-white/90">
+              Return to the homepage
+            </h4>
+          </div>
+
+          <div class="">
+            <Component
+              src="src/components/shared/button/button-primary.htm"
+              button-text="Go home"
+              href="/"
+              class="inline-block"
+            />
+          </div>
+        </div>
+
+        <!-- card 02: Services -->
+        <div
+          class="bg-background-5 flex flex-col justify-between space-y-14 rounded-lg p-6 md:p-8"
+          data-opai-animate
+          data-delay="0.12"
+        >
+          <div class="space-y-6">
+            <span class="ns-shape-42 inline-block text-4xl text-white"></span>
+            <h4 class="font-inter-tight text-tagline-2 block font-normal text-white/90">
+              Explore our services
+            </h4>
+          </div>
+
+          <div class="">
+            <Component
+              src="src/components/shared/button/button-primary.htm"
+              button-text="View services"
+              href="./services.html"
+              class="inline-block"
+            />
+          </div>
+        </div>
+
+        <!-- card 03: Contact -->
+        <div
+          class="bg-background-5 flex flex-col justify-between space-y-14 rounded-lg p-6 md:p-8"
+          data-opai-animate
+          data-delay="0.14"
+        >
+          <div class="space-y-6">
+            <span class="ns-shape-44 inline-block text-4xl text-white"></span>
+            <h4 class="font-inter-tight text-tagline-2 block font-normal text-white/90">
+              Talk to our team
+            </h4>
+          </div>
+
+          <div>
+            <Component
+              src="src/components/shared/button/button-primary.htm"
+              button-text="Contact us"
+              href="./contact.html"
+              class="inline-block"
+            />
+          </div>
+        </div>
+
+        <!-- card 04: Resources -->
+        <div
+          class="bg-background-5 flex flex-col justify-between space-y-14 rounded-lg p-6 md:p-8"
+          data-opai-animate
+          data-delay="0.16"
+        >
+          <div class="space-y-6">
+            <span class="ns-shape-46 inline-block text-4xl text-white"></span>
+            <h4 class="font-inter-tight text-tagline-2 block font-normal text-white/90">
+              Browse resources
+            </h4>
+          </div>
+
+          <div>
+            <Component
+              src="src/components/shared/button/button-primary.htm"
+              button-text="View blog"
+              href="./blog.html"
+              class="inline-block"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

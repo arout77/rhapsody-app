@@ -1,0 +1,428 @@
+<!-- ============================= Pricing ============================= -->
+<section
+  class="{=$section-class} bg-background-6 price-scope overflow-x-hidden pt-16 pb-16 md:pt-20 md:pb-26 lg:pt-26 lg:pb-47 xl:pt-28 xl:pb-50.5"
+>
+  <div class="main-container space-y-13 lg:space-y-19">
+    <div class="space-y-1.5 text-center md:space-y-3 lg:mx-auto lg:max-w-[680px]">
+      <h2
+        data-opai-text-reveal
+        data-word-delay="0.03"
+        data-word-rotation-x="120"
+        data-word-offset-y="50"
+        class="xl:text-sora-heading-2 lg:text-sora-heading-3 text-sora-heading-4 font-normal tracking-[-2.4px] text-white/90"
+      >
+        Simple, transparent
+        <span class="text-white/30"> pricing that scales with you</span>
+      </h2>
+      <p
+        data-opai-text-reveal
+        data-delay="0.2"
+        data-word-delay="0.01"
+        data-word-offset-y="42"
+        data-word-rotation-x="10"
+        class="text-tagline-2 font-inter-tight w-full font-normal text-white/60 lg:mx-auto lg:max-w-[510px]"
+      >
+        Whether you're launching or growing, choose a plan that delivers value without compromise.
+      </p>
+    </div>
+
+    <!-- pricing switcher -->
+    <div class="flex items-center justify-center" data-opai-animate data-delay="0.25">
+      <label class="inline-flex cursor-pointer items-center">
+        <span class="text-tagline-2 me-2.5 font-normal text-white/60 select-none">Monthly</span>
+        <input
+          type="checkbox"
+          value=""
+          class="peer sr-only"
+          data-pricing-billing-toggle
+          aria-label="Toggle yearly billing"
+        />
+        <div
+          class="after:shadow-16 relative h-6 w-11.5 rounded-full bg-white/20 peer-checked:bg-white/30 peer-focus:outline-none after:absolute after:inset-s-[2px] after:top-1/2 after:size-5 after:-translate-y-1/2 after:rounded-full after:bg-(image:--color-gradient-14) after:transition-all after:content-[''] peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full"
+        ></div>
+        <span class="text-tagline-2 ms-2.5 font-normal text-white/60 select-none">Yearly</span>
+      </label>
+    </div>
+
+    <!-- pricing cards -->
+    <div class="grid grid-cols-12 gap-y-8 lg:gap-x-8">
+      <!-- card one -->
+      <article class="col-span-12 lg:col-span-4" data-opai-animate data-delay="0.3">
+        <div
+          class="bg-background-5 border-stroke-1/11 mx-auto w-full max-w-[708px] space-y-6 rounded-lg border p-8 backdrop-blur-[57px] lg:max-w-[408px] lg:p-10.5"
+        >
+          <div class="space-y-1">
+            <h3 class="text-manrope-heading-5 font-normal text-white/80">Starter</h3>
+            <p class="text-tagline-3 font-normal text-white/50">Solo users & startups</p>
+          </div>
+          <!-- price   -->
+          <div data-pricing-price data-pricing-monthly="0" data-pricing-yearly="0">
+            <h4
+              class="font-manrope text-manrope-heading-4 inline-flex items-baseline font-medium text-white/90"
+            >
+              $<number-flow data-pricing-number></number-flow>/<span
+                data-pricing-period
+                class="font-inter-tight text-tagline-2 font-normal text-white/60"
+                >mo</span
+              >
+            </h4>
+          </div>
+
+          <ul class="space-y-2">
+            <li
+              class="font-inter-tight text-tagline-3 flex items-center justify-start gap-x-3 text-left font-normal text-white/60"
+            >
+              <span class="flex size-4 items-center justify-center">
+                <Component
+                  src="src/components/shared/icon/check-icon.htm"
+                  class="size-full stroke-white/20"
+                />
+              </span>
+              Basic workflows
+            </li>
+            <li
+              class="font-inter-tight text-tagline-3 flex items-center justify-start gap-x-3 text-left font-normal text-white/60"
+            >
+              <span class="flex size-4 items-center justify-center">
+                <Component
+                  src="src/components/shared/icon/check-icon.htm"
+                  class="size-full stroke-white/20"
+                />
+              </span>
+              10 automation runs/month
+            </li>
+            <li
+              class="font-inter-tight text-tagline-3 flex items-center justify-start gap-x-3 text-left font-normal text-white/60"
+            >
+              <span class="flex size-4 items-center justify-center">
+                <Component
+                  src="src/components/shared/icon/check-icon.htm"
+                  class="size-full stroke-white/20"
+                />
+              </span>
+              Core integrations
+            </li>
+            <li
+              class="font-inter-tight text-tagline-3 flex items-center justify-start gap-x-3 text-left font-normal text-white/60"
+            >
+              <span class="flex size-4 items-center justify-center">
+                <Component
+                  src="src/components/shared/icon/check-icon.htm"
+                  class="size-full stroke-white/20"
+                />
+              </span>
+              Community support
+            </li>
+            <li
+              class="font-inter-tight text-tagline-3 flex items-center justify-start gap-x-3 text-left font-normal text-white/10"
+            >
+              <span class="flex size-4 items-center justify-center">
+                <Component
+                  src="src/components/shared/icon/check-icon.htm"
+                  class="size-full stroke-white/10"
+                />
+              </span>
+              Multi-user collaboration
+            </li>
+            <li
+              class="font-inter-tight text-tagline-3 flex items-center justify-start gap-x-3 text-left font-normal text-white/10"
+            >
+              <span class="flex size-4 items-center justify-center">
+                <Component
+                  src="src/components/shared/icon/check-icon.htm"
+                  class="size-full stroke-white/10"
+                />
+              </span>
+              Advanced analytics
+            </li>
+            <li
+              class="font-inter-tight text-tagline-3 flex items-center justify-start gap-x-3 text-left font-normal text-white/10"
+            >
+              <span class="flex size-4 items-center justify-center">
+                <Component
+                  src="src/components/shared/icon/check-icon.htm"
+                  class="size-full stroke-white/10"
+                />
+              </span>
+              Priority support
+            </li>
+          </ul>
+
+          <div class="text-center">
+            <Component
+              src="src/components/shared/button/button-primary.htm"
+              button-text="Get started now"
+              href="./contact.html"
+              class="mt-4.5 w-full"
+              anchor-class="w-full "
+            />
+          </div>
+        </div>
+      </article>
+      <!-- card Two -->
+      <article class="relative col-span-12 lg:col-span-4" data-opai-animate data-delay="0.4">
+        <div
+          class="bg-background-5 border-stroke-1/11 relative z-10 mx-auto w-full max-w-[708px] space-y-6 overflow-hidden rounded-lg border p-8 backdrop-blur-[57px] lg:max-w-[408px] lg:p-10.5"
+        >
+          <div
+            class="absolute top-[-23%] left-[-26%] z-0 size-34 bg-white mix-blend-plus-lighter blur-[25.5px]"
+          ></div>
+          <div
+            class="bg-opai-blue absolute top-[-17%] left-[-18%] z-0 size-34 mix-blend-plus-lighter blur-[42px]"
+          ></div>
+          <div class="space-y-1">
+            <h3 class="text-manrope-heading-5 font-normal text-white/80">Premium</h3>
+            <p class="text-tagline-3 font-normal text-white/50">Great for teams & advanced users</p>
+          </div>
+          <!-- price   -->
+          <div data-pricing-price data-pricing-monthly="99" data-pricing-yearly="990">
+            <h4
+              class="font-manrope text-manrope-heading-4 inline-flex items-baseline font-medium text-white/90"
+            >
+              $<number-flow data-pricing-number></number-flow>/<span
+                data-pricing-period
+                class="font-inter-tight text-tagline-2 font-normal text-white/60"
+                >mo</span
+              >
+            </h4>
+          </div>
+
+          <ul class="space-y-2">
+            <li
+              class="font-inter-tight text-tagline-3 flex items-center justify-start gap-x-3 text-left font-normal text-white/60"
+            >
+              <span class="flex size-4 items-center justify-center">
+                <Component
+                  src="src/components/shared/icon/check-icon.htm"
+                  class="size-full stroke-white/20"
+                />
+              </span>
+              Unlimited workflows
+            </li>
+            <li
+              class="font-inter-tight text-tagline-3 flex items-center justify-start gap-x-3 text-left font-normal text-white/60"
+            >
+              <span class="flex size-4 items-center justify-center">
+                <Component
+                  src="src/components/shared/icon/check-icon.htm"
+                  class="size-full stroke-white/20"
+                />
+              </span>
+              1000 automation runs/month
+            </li>
+            <li
+              class="font-inter-tight text-tagline-3 flex items-center justify-start gap-x-3 text-left font-normal text-white/60"
+            >
+              <span class="flex size-4 items-center justify-center">
+                <Component
+                  src="src/components/shared/icon/check-icon.htm"
+                  class="size-full stroke-white/20"
+                />
+              </span>
+              Premium integrations
+            </li>
+            <li
+              class="font-inter-tight text-tagline-3 flex items-center justify-start gap-x-3 text-left font-normal text-white/60"
+            >
+              <span class="flex size-4 items-center justify-center">
+                <Component
+                  src="src/components/shared/icon/check-icon.htm"
+                  class="size-full stroke-white/20"
+                />
+              </span>
+              Multi-user collaboration
+            </li>
+            <li
+              class="font-inter-tight text-tagline-3 flex items-center justify-start gap-x-3 text-left font-normal text-white/60"
+            >
+              <span class="flex size-4 items-center justify-center">
+                <Component
+                  src="src/components/shared/icon/check-icon.htm"
+                  class="size-full stroke-white/20"
+                />
+              </span>
+              Advanced analytics
+            </li>
+            <li
+              class="font-inter-tight text-tagline-3 flex items-center justify-start gap-x-3 text-left font-normal text-white/10"
+            >
+              <span class="flex size-4 items-center justify-center">
+                <Component
+                  src="src/components/shared/icon/check-icon.htm"
+                  class="size-full stroke-white/10"
+                />
+              </span>
+              Priority support
+            </li>
+            <li
+              class="font-inter-tight text-tagline-3 flex items-center justify-start gap-x-3 text-left font-normal text-white/10"
+            >
+              <span class="flex size-4 items-center justify-center">
+                <Component
+                  src="src/components/shared/icon/check-icon.htm"
+                  class="size-full stroke-white/10"
+                />
+              </span>
+              Premium assistance
+            </li>
+          </ul>
+
+          <div class="text-center">
+            <Component
+              src="src/components/shared/button/button-primary.htm"
+              button-text="Get started now"
+              href="./contact.html"
+              class="w-full"
+              anchor-class="w-full mt-4.5"
+            />
+          </div>
+        </div>
+
+        <div
+          class="bg-background-5 pricing-spotlight-footer-box border-stroke-1/11 relative z-10 mx-auto w-full max-w-[708px] space-y-2 overflow-hidden rounded-lg border px-7 py-3 backdrop-blur-[57px] md:px-10.5 md:py-6 lg:max-w-[408px] lg:-rotate-4"
+        >
+          <figure
+            class="bg-background-4 border-stroke-1/10 flex size-9 items-center justify-center rounded-full border"
+          >
+            <img
+              src="./images/logo/logo-green-small.svg"
+              class="size-6.5 object-cover"
+              alt="enterprise"
+            />
+          </figure>
+          <figcaption>
+            <h3 class="text-manrope-heading-6 font-normal text-white/80">Optim AI</h3>
+            <p class="text-tagline-3 font-normal text-white/90">+$999</p>
+          </figcaption>
+
+          <!-- gradient -->
+          <div
+            class="absolute -top-[37%] -right-[35%] z-0 size-34 bg-white mix-blend-plus-lighter blur-[25.5px]"
+          ></div>
+          <div
+            class="bg-opai-blue absolute -top-[28%] -right-[18%] z-0 size-34 mix-blend-plus-lighter blur-[42px]"
+          ></div>
+        </div>
+        <!-- Plus -->
+        <img
+          src="./images/opai-img-104.svg"
+          alt="plus"
+          class="absolute -right-[0.5%] bottom-[19.5%] z-10 size-7 md:size-9 lg:-right-[3.5%]"
+        />
+      </article>
+      <!-- card three -->
+      <article class="col-span-12 lg:col-span-4" data-opai-animate data-delay="0.5">
+        <div
+          class="bg-background-5 border-stroke-1/11 mx-auto w-full max-w-[708px] space-y-6 rounded-lg border p-8 backdrop-blur-[57px] lg:max-w-[408px] lg:p-10.5"
+        >
+          <div class="space-y-1">
+            <h3 class="text-manrope-heading-5 font-normal text-white/80">Enterprise</h3>
+            <p class="text-tagline-3 font-normal text-white/50">Built for large-scale operations</p>
+          </div>
+          <!-- price   -->
+          <div data-pricing-price data-pricing-monthly="499" data-pricing-yearly="4990">
+            <h4
+              class="font-manrope text-manrope-heading-4 inline-flex items-baseline font-medium text-white/90"
+            >
+              $<number-flow data-pricing-number></number-flow>/<span
+                data-pricing-period
+                class="font-inter-tight text-tagline-2 font-normal text-white/60"
+                >mo</span
+              >
+            </h4>
+          </div>
+
+          <ul class="space-y-2">
+            <li
+              class="font-inter-tight text-tagline-3 flex items-center justify-start gap-x-3 text-left font-normal text-white/60"
+            >
+              <span class="flex size-4 items-center justify-center">
+                <Component
+                  src="src/components/shared/icon/check-icon.htm"
+                  class="size-full stroke-white/20"
+                />
+              </span>
+              All features unlocked
+            </li>
+            <li
+              class="font-inter-tight text-tagline-3 flex items-center justify-start gap-x-3 text-left font-normal text-white/60"
+            >
+              <span class="flex size-4 items-center justify-center">
+                <Component
+                  src="src/components/shared/icon/check-icon.htm"
+                  class="size-full stroke-white/20"
+                />
+              </span>
+              Premium integrations
+            </li>
+            <li
+              class="font-inter-tight text-tagline-3 flex items-center justify-start gap-x-3 text-left font-normal text-white/60"
+            >
+              <span class="flex size-4 items-center justify-center">
+                <Component
+                  src="src/components/shared/icon/check-icon.htm"
+                  class="size-full stroke-white/20"
+                />
+              </span>
+              Team management tools
+            </li>
+            <li
+              class="font-inter-tight text-tagline-3 flex items-center justify-start gap-x-3 text-left font-normal text-white/60"
+            >
+              <span class="flex size-4 items-center justify-center">
+                <Component
+                  src="src/components/shared/icon/check-icon.htm"
+                  class="size-full stroke-white/20"
+                />
+              </span>
+              Priority support
+            </li>
+            <li
+              class="font-inter-tight text-tagline-3 flex items-center justify-start gap-x-3 text-left font-normal text-white/60"
+            >
+              <span class="flex size-4 items-center justify-center">
+                <Component
+                  src="src/components/shared/icon/check-icon.htm"
+                  class="size-full stroke-white/20"
+                />
+              </span>
+              Premium assistance
+            </li>
+            <li
+              class="font-inter-tight text-tagline-3 flex items-center justify-start gap-x-3 text-left font-normal text-white/60"
+            >
+              <span class="flex size-4 items-center justify-center">
+                <Component
+                  src="src/components/shared/icon/check-icon.htm"
+                  class="size-full stroke-white/20"
+                />
+              </span>
+              Essential features
+            </li>
+            <li
+              class="font-inter-tight text-tagline-3 flex items-center justify-start gap-x-3 text-left font-normal text-white/60"
+            >
+              <span class="flex size-4 items-center justify-center">
+                <Component
+                  src="src/components/shared/icon/check-icon.htm"
+                  class="size-full stroke-white/20"
+                />
+              </span>
+              Advanced automations
+            </li>
+          </ul>
+
+          <div class="text-center">
+            <Component
+              src="src/components/shared/button/button-primary.htm"
+              button-text="Get started now"
+              href="./contact.html"
+              class="mt-4.5 w-full"
+              anchor-class="w-full"
+            />
+          </div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>

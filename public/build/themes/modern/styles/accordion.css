@@ -1,0 +1,52 @@
+/* ================= Accordion Styles ================= */
+
+.accordion-item.active {
+  @apply bg-background-5 transition-colors duration-300 ease-in-out;
+}
+
+.accordion-item.active h3 {
+  @apply !pb-4;
+}
+
+.accordion-item.active h3 .accordion-plus-icon,
+.accordion-item.active h3 .accordion-plus-icon-v2 {
+  @apply before:rotate-90;
+}
+
+.accordion-item.active {
+  .accordion-active-gradient {
+    @apply opacity-100;
+  }
+
+  /* homepage two  */
+  [data-homepage-two-faq-top-line='true'] {
+    @apply w-full transition-[width] duration-600 ease-in-out;
+  }
+  [data-homepage-two-faq-gradient='true'] {
+    @apply h-[110%] transition-[height] duration-600 ease-in-out;
+  }
+}
+
+/* GSAP SplitText Support */
+.accordion-content {
+  @apply transform-gpu;
+}
+
+.accordion-content p {
+  @apply transform-gpu;
+  transform-style: preserve-3d;
+}
+
+/* SplitText line elements */
+.accordion-content .split-text-line {
+  @apply transform-gpu;
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+}
+/*================ Accordion Plus Icon Styles ================= */
+.accordion-plus-icon {
+  @apply relative size-5 rounded-full border border-white/50 px-[8.5px] duration-[0.4s] ease-[var(--easing-faq)] before:absolute before:top-1/2 before:left-1/2 before:h-[8.5px] before:w-[1px] before:-translate-x-[62%] before:-translate-y-1/2 before:rotate-0 before:rounded-full before:bg-white/50 before:transition-transform before:duration-[0.4s] before:ease-[var(--easing-faq)] before:content-[''] after:absolute after:top-1/2 after:left-1/2 after:h-[8.5px] after:w-[1px] after:-translate-x-1/2 after:-translate-y-1/2 after:rotate-90 after:rounded-full after:bg-white/50 after:transition-transform after:duration-[0.4s] after:ease-[var(--easing-faq)] after:content-[''];
+}
+.accordion-plus-icon-v2 {
+  @apply relative size-5 rounded-full px-[8.5px] duration-[0.4s] ease-[var(--easing-faq)] before:absolute before:top-1/2 before:left-1/2 before:h-[16px] before:w-[1px] before:-translate-x-[62%] before:-translate-y-1/2 before:rotate-0 before:rounded-full before:bg-white before:transition-transform before:duration-[0.4s] before:ease-[var(--easing-faq)] before:content-[''] after:absolute after:top-1/2 after:left-1/2 after:h-[16px] after:w-[1px] after:-translate-x-1/2 after:-translate-y-1/2 after:rotate-90 after:rounded-full after:bg-white after:transition-transform after:duration-[0.4s] after:ease-[var(--easing-faq)] after:content-[''];
+}

@@ -1,0 +1,10 @@
+/*
+ * Keystone — custom.css
+ * Your own styles go here. This file loads AFTER keystone.min.css on every page,
+ * so anything you write wins. It is intentionally empty.
+ *
+ * Example: change the brand colour in light mode
+ *   :root { --ks-primary: #0b6b3a; --ks-primary-hover: #095630; }
+ * and in dark mode (this selector also covers visitors who pinned dark):
+ *   :root[data-theme="dark"] { --ks-primary: #6ee7a8; }
+ */

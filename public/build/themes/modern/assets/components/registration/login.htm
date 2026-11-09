@@ -1,0 +1,194 @@
+<!-- =========================
+Login
+===========================-->
+<section class="pt-39">
+  <div class="main-container">
+    <div
+      class="relative w-full overflow-hidden rounded-[20px] bg-black/40 px-4 py-10 md:py-16 lg:px-13 lg:py-39"
+    >
+      <!-- bg globe image -->
+      <figure class="absolute -top-80 left-0 size-full md:top-16">
+        <img
+          src="./images/opai-img-43.png"
+          alt="bg-globe"
+          class="globe-image object-contain opacity-50 mix-blend-lighten max-[602px]:size-[107%] md:size-full md:object-cover"
+        />
+      </figure>
+
+      <div class="space-y-14">
+        <div class="text-center">
+          <h2
+            data-opai-text-reveal
+            data-word-delay="0.03"
+            data-word-rotation-x="120"
+            data-word-offset-y="49"
+            class="md:text-sora-heading-3 text-sora-heading-4 lg:text-sora-heading-2 text-center font-normal tracking-[-2.4px] text-white/90 max-md:leading-[1.1]"
+          >
+            Let’s get started
+          </h2>
+          <p
+            data-opai-text-reveal
+            data-delay="0.2"
+            data-word-delay="0.01"
+            data-word-offset-y="42"
+            class="font-inter-tight text-tagline-2 mx-auto max-w-[320px] font-normal text-white/60"
+          >
+            Access your dashboard and continue building AI-driven solutions for your business.
+          </p>
+        </div>
+
+        <!-- form  -->
+        <form
+          data-opai-animate
+          data-delay="0.1"
+          action="#"
+          class="bg-background-5 mx-auto w-full max-w-[420px] space-y-6 rounded-xl p-8"
+        >
+          <div>
+            <!-- email  -->
+            <fieldset class="mb-6 space-y-2">
+              <label
+                for="login-email"
+                class="text-inter-tight text-tagline-2 inline-block font-normal text-white/90"
+                >Your email</label
+              >
+              <input
+                type="email"
+                id="login-email"
+                name="email"
+                placeholder="Enter your email"
+                class="border-stroke-1/11 focus-within:border-stroke-1/70 w-full rounded-md border px-4.5 py-3 text-white/90 placeholder:text-white/60 focus-within:outline-none"
+                required
+                aria-label="Your email"
+              />
+            </fieldset>
+
+            <!-- password  -->
+            <fieldset class="mb-4 space-y-2">
+              <label
+                for="login-password"
+                class="text-inter-tight text-tagline-2 inline-block font-normal text-white/90"
+                >Password</label
+              >
+              <input
+                type="password"
+                id="login-password"
+                name="password"
+                placeholder="Enter your password"
+                class="border-stroke-1/11 focus-within:border-stroke-1/70 w-full rounded-md border px-4.5 py-3 text-white/90 placeholder:text-white/60 focus-within:outline-none"
+                required
+                aria-label="Password"
+              />
+            </fieldset>
+
+            <!-- remember + forgot -->
+            <div class="mb-6 flex items-center justify-between gap-4">
+              <label class="flex cursor-pointer items-center gap-1.5">
+                <input
+                  type="checkbox"
+                  name="remember"
+                  class="peer sr-only"
+                  aria-label="Remember me"
+                />
+                <span
+                  class="border-stroke-1/11 peer-checked:border-primary-500 relative size-5 cursor-pointer rounded-full border after:absolute after:top-1/2 after:left-1/2 after:size-3 after:-translate-x-1/2 after:-translate-y-1/2 after:rounded-full after:bg-white/50 after:opacity-0 peer-checked:after:opacity-100"
+                ></span>
+                <span class="text-tagline-3 font-medium text-white/90 select-none">
+                  Remember me
+                </span>
+              </label>
+
+              <a
+                href="#"
+                class="text-tagline-3 font-normal text-white/60 underline underline-offset-2 transition-colors duration-300 ease-in-out hover:text-white/90"
+              >
+                Forgot password?
+              </a>
+            </div>
+
+            <!-- primary action -->
+            <div>
+              <Component
+                src="src/components/shared/button/submit-primary.htm"
+                button-text="Log in"
+                anchor-class="w-full"
+              />
+            </div>
+            <p class="text-tagline-3 mt-5 text-center font-normal text-white/60">
+              Don't have an account?
+              <a
+                href="./sign-up.html"
+                class="font-medium text-white/90 underline underline-offset-2 transition-colors duration-300 ease-in-out hover:text-white"
+                >Sign up</a
+              >
+            </p>
+          </div>
+
+          <!-- social button and or divider -->
+          <div class="space-y-6">
+            <p
+              class="text-tagline-4 relative px-2 text-center font-normal text-white/90 before:absolute before:top-1/2 before:left-[26%] before:block before:h-px before:w-[43px] before:-translate-y-1/2 before:bg-[linear-gradient(270deg,rgba(210,223,240,0.40)_0%,rgba(210,223,240,0.00)_78.71%)] before:content-[''] after:absolute after:top-1/2 after:right-[26%] after:block after:h-px after:w-[43px] after:-translate-y-1/2 after:rotate-180 after:bg-[linear-gradient(270deg,rgba(210,223,240,0.40)_0%,rgba(210,223,240,0.00)_78.71%)] after:content-[''] sm:before:left-[35%] sm:after:right-[35%]"
+            >
+              Or
+            </p>
+
+            <div class="space-y-4 md:space-y-6">
+              <a
+                href="#"
+                class="border-stroke-3/25 hover:bg-stroke-3/25 group flex w-full items-center justify-center gap-2 rounded-md border px-8 py-3 transition-all duration-300 ease-in-out"
+              >
+                <span>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                  >
+                    <path
+                      d="M21.7541 12.2199C21.7541 11.4182 21.6878 10.8332 21.5441 10.2266H12.2031V13.8449H17.6861C17.5756 14.744 16.9786 16.0982 15.6521 17.0082L15.6335 17.1293L18.5869 19.3715L18.7915 19.3916C20.6708 17.6907 21.7541 15.1882 21.7541 12.2199Z"
+                      fill="#4285F4"
+                    />
+                    <path
+                      d="M12.2002 21.7514C14.8864 21.7514 17.1415 20.8847 18.7886 19.3897L15.6492 17.0063C14.8091 17.5805 13.6815 17.9813 12.2002 17.9813C9.56932 17.9813 7.33635 16.2805 6.54036 13.9297L6.42369 13.9394L3.35266 16.2686L3.3125 16.378C4.94853 19.563 8.30907 21.7514 12.2002 21.7514Z"
+                      fill="#34A853"
+                    />
+                    <path
+                      d="M6.53907 13.9306C6.32904 13.3239 6.20749 12.6739 6.20749 12.0023C6.20749 11.3305 6.32904 10.6806 6.52802 10.0739L6.52246 9.94471L3.41294 7.57812L3.3112 7.62555C2.63691 8.94723 2.25 10.4314 2.25 12.0023C2.25 13.5731 2.63691 15.0572 3.3112 16.3789L6.53907 13.9306Z"
+                      fill="#FBBC05"
+                    />
+                    <path
+                      d="M12.2003 6.01997C14.0685 6.01997 15.3286 6.8108 16.0472 7.47168L18.855 4.785C17.1306 3.21417 14.8865 2.25 12.2003 2.25C8.3091 2.25 4.94854 4.43832 3.3125 7.62329L6.52933 10.0717C7.33638 7.72083 9.56936 6.01997 12.2003 6.01997Z"
+                      fill="#EB4335"
+                    />
+                  </svg>
+                </span>
+                <span class="text-tagline-3 font-normal text-white/90">Continue with Google</span>
+              </a>
+              <a
+                href="#"
+                class="border-stroke-3/25 hover:bg-stroke-3/25 group flex w-full items-center justify-center gap-2 rounded-md border px-8 py-3 transition-all duration-300 ease-in-out"
+              >
+                <span>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                  >
+                    <path
+                      d="M22.5 12.0642C22.5 6.22974 17.799 1.5 12 1.5C6.20101 1.5 1.5 6.22974 1.5 12.0642C1.5 17.337 5.33968 21.7075 10.3594 22.5V15.1179H7.69336V12.0642H10.3594V9.73675C10.3594 7.08911 11.927 5.62663 14.3254 5.62663C15.4738 5.62663 16.6758 5.83296 16.6758 5.83296V8.43274H15.3518C14.0475 8.43274 13.6406 9.24713 13.6406 10.0834V12.0642H16.5527L16.0872 15.1179H13.6406V22.5C18.6603 21.7075 22.5 17.337 22.5 12.0642Z"
+                      fill="#0C63D4"
+                    />
+                  </svg>
+                </span>
+                <span class="text-tagline-3 font-normal text-white/90">Continue with facebook</span>
+              </a>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,8 @@
+@import './variable';
+@import './common';
+@import './typography';
+@import 'tailwindcss';
+@import './accordion';
+@import './icon-fonts';
+@import './glowing-card';
+@import './vendor/vanilla-infinite-marquee.min.css';

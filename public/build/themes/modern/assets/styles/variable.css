@@ -1,0 +1,219 @@
+@theme {
+  /* =============== FONTS =============== */
+  --font-inter-tight: 'Inter Tight', sans-serif;
+  --font-ibm-plex-mono: 'IBM Plex Mono', monospace;
+  --font-instrument-serif: 'Instrument Serif', serif;
+  --font-manrope: 'Manrope', sans-serif;
+  --font-sora: 'Sora', sans-serif;
+  --font-space-grotesk: 'Space Grotesk', sans-serif;
+  --font-funnel-display: 'Funnel Display', sans-serif;
+
+  /* =============== COLORS =============== */
+  --color-background-1: #3d4753;
+  --color-background-2: #323a44;
+  --color-background-3: #252a32;
+  --color-background-4: #191d2a;
+  --color-background-5: #11141d;
+  --color-background-6: #0d1017;
+  --color-background-7: #f8f9fa;
+  --color-background-8: #f1f4f6;
+  --color-background-9: #ebf0f3;
+  --color-background-10: #e4eaee;
+  --color-background-11: #dbe2e6;
+  --color-background-12: #ced7de;
+  --color-background-13: #0d0d12;
+  --color-background-14: #12161f;
+  --color-stroke-1: #94aecf;
+  --color-stroke-2: #0708052d;
+  --color-stroke-3: #7c8ea5;
+  --color-opai-yellow: #fff049;
+  --color-opai-purple: #8d59ff;
+  --color-opai-blue: #227eff;
+  --color-opai-lemon: #d0ff00;
+  --color-opai-green: #09f647;
+  --color-opai-red: #ff6b51;
+  --color-opai-orange: #ff7300;
+  --color-opai-cyan: #5ddcf6;
+  --color-opai-indigo: #5f50ff;
+  --color-gradient-1: linear-gradient(#a1ffce 0%, #faffd1 100%);
+  --color-gradient-2: linear-gradient(#ee9ca7 0%, #ffdde1 100%);
+  --color-gradient-3: linear-gradient(#f2709c 0%, #ff9472 100%);
+  --color-gradient-4: linear-gradient(#11998e 0%, #38ef7d 100%);
+  --color-gradient-5: linear-gradient(#2bc0e4 0%, #eaecc6 100%);
+  --color-gradient-6: linear-gradient(#1cd8d2 0%, #93edc7 100%);
+  --color-gradient-7: linear-gradient(#eaecc6 0%, #2bc0e4 100%);
+  --color-gradient-8: linear-gradient(#a585ff 0%, #ffc2ad 100%);
+  --color-gradient-9: linear-gradient(#f9eb57 0%, #f99988 100%);
+  --color-gradient-10: linear-gradient(#83e7ee 0%, #f9eb57 100%);
+  --color-gradient-11: linear-gradient(#864ffe 0%, #23eed6 100%);
+  --color-gradient-12: linear-gradient(#ffffff 5%, #ffffff 20%);
+  --color-gradient-13: linear-gradient(#111111 5%, #111111 20%);
+  --color-gradient-14: radial-gradient(#5ddcf6 100%, #5ddcf6 3%);
+  --color-gradient-15: radial-gradient(#ff6b51 100%, #fff149 0%);
+  --color-gradient-16: radial-gradient(#ffffff 40%, #ffffff 90%);
+  --color-gradient-17: linear-gradient(#6a727b 100%, #5d646b 100%);
+  --color-gradient-18: linear-gradient(#ff6b51 100%, #fff049 100%);
+  --color-gradient-19: linear-gradient(
+    270deg,
+    rgba(255, 255, 255, 0.4) -1.49%,
+    rgba(255, 255, 255, 0.9) 97.04%
+  );
+  --color-gradient-20: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.05) 0%,
+    rgba(255, 255, 255, 0.2) 100%
+  );
+
+  --color-gradient-22: linear-gradient(
+    267deg,
+    rgba(255, 255, 255, 0.4) -9.14%,
+    rgba(255, 255, 255, 0.9) 95%
+  );
+
+  --color-gradient-23: linear-gradient(90deg, #f2709c 0%, #ff9472 100%);
+  --color-gradient-24: linear-gradient(
+    267deg,
+    rgba(255, 255, 255, 0.4) -9.14%,
+    rgba(255, 255, 255, 0.9) 95%
+  );
+  --color-gradient-25: conic-gradient(
+    from 270deg at 50% 50%,
+    rgba(13, 16, 23, 0) 0deg,
+    rgba(13, 16, 23, 0) 90deg,
+    rgba(13, 16, 23, 0) 180deg,
+    #30e3ff 216deg,
+    #734cff 248.4deg,
+    #fff181 280.8deg,
+    #ff4c52 316.8deg
+  );
+
+  --color-gradient-26: linear-gradient(
+    270deg,
+    rgba(0, 0, 0, 0.4) -1.49%,
+    rgba(0, 0, 0, 0.9) 97.04%
+  );
+  --color-gradient-27: conic-gradient(
+    from 270deg at 50% 50%,
+    rgba(13, 16, 23, 0) 0.833479268476367deg,
+    rgba(13, 16, 23, 0) 89.99255955219269deg,
+    rgba(13, 16, 23, 0) 180.78086614608765deg,
+    #30e3ff 216.51387691497803deg,
+    #734cff 250.1554298400879deg,
+    #fff181 282.3073697090149deg,
+    #ff4c52 317.619423866272deg
+  );
+
+  /* =============== TYPOGRAPHY =============== */ /* INTER TIGHT FONT */
+  --text-it-heading-1: 3.5rem;
+  --text-it-heading-1--line-height: 120%;
+  --text-it-heading-2: 3rem;
+  --text-it-heading-2--line-height: 120%;
+  --text-it-heading-3: 2.5rem;
+  --text-it-heading-3--line-height: 120%;
+  --text-it-heading-4: 2rem;
+  --text-it-heading-4--line-height: 130%;
+  --text-it-heading-5: 1.5rem;
+  --text-it-heading-5--line-height: 140%;
+  --text-it-heading-6: 1.25rem;
+  --text-it-heading-6--line-height: 140%;
+  /* INSTRUMENT SERIF FONT */
+  --text-is-heading-1: 4.5rem;
+  --text-is-heading-1--line-height: 120%;
+  --text-is-heading-2: 3.25rem;
+  --text-is-heading-2--line-height: 120%;
+  --text-is-heading-3: 2.75rem;
+  --text-is-heading-3--line-height: 120%;
+  --text-is-heading-4: 2.25rem;
+  --text-is-heading-4--line-height: 130%;
+  --text-is-heading-5: 1.75rem;
+  --text-is-heading-5--line-height: 140%;
+  --text-is-heading-6: 1.25rem;
+  --text-is-heading-6--line-height: 140%;
+  /* SORA FONT */
+  --text-sora-heading-1: 4rem;
+  --text-sora-heading-1--line-height: 120%;
+  --text-sora-heading-1--letter-spacing: -3.2px;
+  --text-sora-heading-2: 3rem;
+  --text-sora-heading-2--line-height: 120%;
+  --text-sora-heading-2--letter-spacing: -2.4px;
+  --text-sora-heading-3: 2.5rem;
+  --text-sora-heading-3--line-height: 120%;
+  --text-sora-heading-3--letter-spacing: -1.6px;
+  --text-sora-heading-4: 2rem;
+  --text-sora-heading-4--line-height: 130%;
+  --text-sora-heading-5: 1.5rem;
+  --text-sora-heading-5--line-height: 140%;
+  --text-sora-heading-6: 1.25rem;
+  --text-sora-heading-6--line-height: 140%;
+  /* MANROPE FONT */
+  --text-manrope-heading-1: 4rem;
+  --text-manrope-heading-1--line-height: 120%;
+  --text-manrope-heading-2: 3rem;
+  --text-manrope-heading-2--line-height: 120%;
+  --text-manrope-heading-3: 2.5rem;
+  --text-manrope-heading-3--line-height: 120%;
+  --text-manrope-heading-4: 2rem;
+  --text-manrope-heading-4--line-height: 130%;
+  --text-manrope-heading-5: 1.5rem;
+  --text-manrope-heading-5--line-height: 140%;
+  --text-manrope-heading-6: 1.25rem;
+  --text-manrope-heading-6--line-height: 140%;
+  /* SPACE GROTESK FONT */
+  --text-sg-heading-1: 4rem;
+  --text-sg-heading-1--line-height: 110%;
+  --text-sg-heading-2: 3rem;
+  --text-sg-heading-2--line-height: 120%;
+  --text-sg-heading-3: 2.5rem;
+  --text-sg-heading-3--line-height: 120%;
+  --text-sg-heading-4: 2rem;
+  --text-sg-heading-4--line-height: 130%;
+  --text-sg-heading-5: 1.5rem;
+  --text-sg-heading-5--line-height: 140%;
+  --text-sg-heading-5--letter-spacing: -0.72px;
+  --text-sg-heading-6: 1.25rem;
+  --text-sg-heading-6--line-height: 140%;
+  --text-sg-heading-6--letter-spacing: -0.6px;
+  /* FUNNEL DISPLAY FONT */
+  --text-fd-heading-1: 4rem;
+  --text-fd-heading-1--line-height: 120%;
+  --text-fd-heading-2: 3rem;
+  --text-fd-heading-2--line-height: 120%;
+  --text-fd-heading-3: 2.5rem;
+  --text-fd-heading-3--line-height: 120%;
+  --text-fd-heading-4: 2rem;
+  --text-fd-heading-4--line-height: 130%;
+  --text-fd-heading-5: 1.5rem;
+  --text-fd-heading-5--line-height: 140%;
+  --text-fd-heading-6: 1.25rem;
+  --text-fd-heading-6--line-height: 140%;
+  /* TAGLINE FONT */
+  --text-tagline-1: 1.125rem;
+  --text-tagline-1--line-height: 150%;
+  --text-tagline-2: 1rem;
+  --text-tagline-2--line-height: 150%;
+  --text-tagline-3: 0.875rem;
+  --text-tagline-3--line-height: 150%;
+  --text-tagline-4: 0.75rem;
+  --text-tagline-4--line-height: 150%;
+  /* ==========BREAKPOINTS========== */
+  --breakpoint-lp: 1440px;
+
+  /* =============== ease =============== */
+  --easing-faq: cubic-bezier(0.4, 0, 0.2, 1);
+  --team-ease-1: cubic-bezier(10.34, 10.56, 0.64, 40);
+  --custom-ease-1: cubic-bezier(0.4, 0, 0.2, 1);
+  --custom-ease-2: cubic-bezier(0.645, 0.045, 0.355, 1);
+
+  /* =============== SHADOWS =============== */
+  --shadow-1: 0 9px 33px 0 rgba(0, 0, 0, 0.25);
+  --shadow-2: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
+  --shadow-3: 0 1px 2px 0 rgba(0, 0, 0, 0.25);
+  --shadow-4: 0 -1px 4px 0 rgba(124, 142, 165, 0.15);
+  --shadow-5:
+    0 0.602187px 1.08394px -1.25px #bdb8b8, 0 2px 4px -2.5px #bcb9b9, 0 40px 38px -3.75px #fff,
+    0 0.706592px 0.706592px -0.583333px #98969659, 0 1.80656px 1.80656px -1.16667px #9e9d9d57,
+    0 3.62176px 3.62176px -1.75px #55545454, 0 6.8656px 6.8656px -2.33333px #9d9c9c1a,
+    0 8px 8px -2.91667px #bdbbbb1a, 0 10px 10px -3.5px #a8a8a826;
+
+  --shadow-6: 0 20px 65px -5px rgba(28, 34, 43, 0.05)
+}

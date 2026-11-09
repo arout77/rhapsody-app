@@ -1,0 +1,44 @@
+/* glowing Effect Styles - Radial gradient following mouse */
+.glowing-card {
+  @apply relative z-5 overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)];
+}
+
+.glowing-card::before {
+  @apply pointer-events-none absolute inset-0 z-[1] rounded-[inherit] opacity-30 transition-all duration-300 ease-out content-[''] hover:opacity-60;
+  background: radial-gradient(
+    100rem circle at var(--xPos) var(--yPos),
+    rgba(34, 126, 255, 0.4),
+    transparent 15%
+  );
+}
+
+.glowing-card::after {
+  @apply pointer-events-none absolute inset-0 z-[2] rounded-[inherit] opacity-20 transition-all duration-500 ease-out content-[''] hover:opacity-40;
+  background: radial-gradient(
+    60rem circle at var(--xPos) var(--yPos),
+    rgba(34, 126, 255, 0.7),
+    transparent 35%
+  );
+}
+
+.glowing-card-v2 {
+  @apply relative z-5 overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)];
+}
+
+.glowing-card-v2::before {
+  @apply pointer-events-none absolute inset-0 z-[1] rounded-[inherit] opacity-30 transition-all duration-300 ease-out content-[''] hover:opacity-60;
+  background: radial-gradient(
+    100rem circle at var(--xPos) var(--yPos),
+    rgba(141, 89, 255, 0.4),
+    transparent 15%
+  );
+}
+
+.glowing-card-v2::after {
+  @apply pointer-events-none absolute inset-0 z-[2] rounded-[inherit] opacity-20 transition-all duration-500 ease-out content-[''] hover:opacity-40;
+  background: radial-gradient(
+    60rem circle at var(--xPos) var(--yPos),
+    rgba(141, 89, 255, 0.7),
+    transparent 35%
+  );
+}

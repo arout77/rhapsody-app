@@ -1,0 +1,11 @@
+/* Lumen — your custom overrides. Loaded after lumen.min.css and never overwritten by theme updates. */
+
+/* Code blocks inside .lm-window on the landing page */
+.lm-code {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: .8125rem;
+  line-height: 1.75;
+  white-space: pre;
+}
+.lm-code code { font-family: inherit; }

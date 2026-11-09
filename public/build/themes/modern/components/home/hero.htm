@@ -1,0 +1,84 @@
+<!-- ============================= Hero ============================= -->
+
+<section class="relative overflow-hidden">
+  <div
+    class="laser-flow h-[330px] md:h-[380px] lg:h-[1280px] xl:h-[1336px]"
+    data-color="#5A9FFF"
+    data-horizontal-sizing=".4"
+    data-vertical-sizing="1.8"
+    data-wisp-density="1"
+    data-wisp-speed="15"
+    data-wisp-intensity="5"
+    data-flow-speed="0.35"
+    data-flow-strength="0.25"
+    data-fog-intensity="0.45"
+    data-fog-scale="0.3"
+    data-fog-fall-speed="0.6"
+    data-decay="1.1"
+    data-falloff-start="1.2"
+    data-beam-x="0.1"
+    data-beam-y="0.0"
+    data-mouse-smooth="0.0"
+    data-tilt-strength="0.01"
+    data-dpr="auto"
+    data-pointer-events="none"
+  ></div>
+
+  <div
+    class="main-container relative z-10 pt-40 pb-14 max-lg:flex max-lg:flex-col-reverse max-lg:gap-y-20 max-md:gap-y-14 md:pt-43 md:pb-20 lg:space-y-36 lg:pt-46 xl:pb-28"
+  >
+    <div>
+      <h1
+        data-opai-text-reveal
+        data-word-offset-y="42"
+        data-word-rotation-x="90"
+        data-word-delay="0.09"
+        class="xl:text-sora-heading-1 md:text-sora-heading-2 text-sora-heading-3 mb-2 overflow-hidden font-normal text-white lg:mb-4 lg:tracking-[-3.2px]"
+      >
+        Automate
+        <span class="text-white/50"
+          >smarter, <br class="hidden lg:block" />
+          grow faster.</span
+        >
+      </h1>
+      <p
+        data-opai-text-reveal
+        data-delay="0.2"
+        data-word-delay="0.01"
+        data-word-offset-y="42"
+        data-word-rotation-x="10"
+        class="text-tagline-2 mb-12 text-white/60 lg:mb-14 lg:max-w-[492px]"
+      >
+        Streamline workflows, eliminate repetitive tasks, and unlock next-level efficiency with
+        Optim-AI’s powerful automation tools.
+      </p>
+      <div data-opai-animate data-delay="0.3" class="w-[85%] md:w-full">
+        <Component
+          src="src/components/shared/button/button-primary.htm"
+          button-text="Get Started"
+          anchor-class="w-full md:w-auto"
+          href="./pricing.html"
+        />
+      </div>
+    </div>
+
+    <div class="relative" data-opai-animate data-delay="0.4" data-instant="true">
+      <!-- image  -->
+      <figure
+        class="shadow-2 relative z-2 mx-auto size-full max-w-[1288px] overflow-hidden rounded-md lg:rounded-[14px]"
+      >
+        <img src="./images/opai-img-60.png" alt="Hero Img" class="size-full object-cover" />
+      </figure>
+      <!-- effect image -->
+      <div
+        class="absolute top-[-11%] left-[50%] z-1 w-[calc(100%+50px)] -translate-x-1/2 md:w-[calc(100%+100px)] lg:h-[600px] xl:w-[calc(100%+200px)]"
+      >
+        <img src="./images/effect.png" alt="Hero img" class="size-full" />
+      </div>
+      <!-- bottom gradient -->
+      <div
+        class="absolute bottom-[-2%] left-0 z-3 h-[150px] w-full bg-linear-[180deg,rgba(13,16,23,0.00)_0%,#0D1017_93.95%] lg:h-[465px]"
+      ></div>
+    </div>
+  </div>
+</section>

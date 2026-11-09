@@ -1,0 +1,160 @@
+<header
+  data-opai-animate
+  data-delay="0.1"
+  data-direction="top"
+  class="header-scroll bg-background-6/10 fixed top-0 right-0 left-0 z-50 w-full px-2 py-4 backdrop-blur-[25px] lg:py-0"
+>
+  <nav class="relative mx-auto max-w-[1920px]">
+    <div class="flex items-center justify-between xl:gap-20 2xl:gap-32">
+      <a href="./index.html" class="flex items-center gap-1.5">
+        <figure class="hidden h-full max-h-[40px] w-[166px] xl:block">
+          <img src="./images/logo/logo-white.svg" alt="logo" class="size-full" />
+          <span class="sr-only">Optim AI</span>
+        </figure>
+        <figure class="block size-11 xl:hidden">
+          <img src="./images/logo/logo-small.svg" alt="logo" class="size-full" />
+          <span class="sr-only">Optim AI</span>
+        </figure>
+      </a>
+
+      <ul class="hidden items-center gap-x-12 lg:flex">
+        <li
+          class="nav-item group/nav-item relative cursor-pointer py-6"
+          data-menu="company-mega-menu"
+        >
+          <a href="#" class="group flex items-center gap-1.5">
+            <span
+              class="text-tagline-3 font-ibm-plex-mono leading-[21.7px] font-normal tracking-[1.68px] text-nowrap text-white/60 transition-colors duration-500 group-hover/nav-item:text-white"
+            >
+              Company
+            </span>
+            <span
+              class="transition-transform duration-500 ease-in-out group-hover/nav-item:rotate-180"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="10"
+                height="5"
+                viewBox="0 0 10 5"
+                fill="none"
+              >
+                <path
+                  d="M1.19922 0.5L5.19922 4.5L9.19922 0.5"
+                  class="stroke-white/60 transition-colors duration-500 group-hover/nav-item:stroke-white"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </span>
+          </a>
+        </li>
+        <li
+          class="nav-item group/nav-item relative cursor-pointer py-6"
+          data-menu="inner-pages-mega-menu"
+        >
+          <a href="#" class="flex items-center gap-1.5">
+            <span
+              class="text-tagline-3 font-ibm-plex-mono leading-[21.7px] font-normal tracking-[1.68px] text-nowrap text-white/60 transition-colors duration-500 group-hover/nav-item:text-white"
+            >
+              Inner pages
+            </span>
+            <span
+              class="transition-transform duration-500 ease-in-out group-hover/nav-item:rotate-180"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="10"
+                height="5"
+                viewBox="0 0 10 5"
+                fill="none"
+              >
+                <path
+                  d="M1.19922 0.5L5.19922 4.5L9.19922 0.5"
+                  class="stroke-white/60 transition-colors duration-500 group-hover/nav-item:stroke-white"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </span>
+          </a>
+        </li>
+        <li
+          class="nav-item group/nav-item relative cursor-pointer py-6"
+          data-menu="platform-mega-menu"
+        >
+          <a href="#" class="flex items-center gap-1.5">
+            <span
+              class="text-tagline-3 font-ibm-plex-mono leading-[21.7px] font-normal tracking-[1.68px] text-white/60 transition-colors duration-500 group-hover/nav-item:text-white"
+            >
+              Platform
+            </span>
+            <span
+              class="transition-transform duration-500 ease-in-out group-hover/nav-item:rotate-180"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="10"
+                height="5"
+                viewBox="0 0 10 5"
+                fill="none"
+              >
+                <path
+                  d="M1.19922 0.5L5.19922 4.5L9.19922 0.5"
+                  class="stroke-white/60 transition-colors duration-500 group-hover/nav-item:stroke-white"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </span>
+          </a>
+        </li>
+        <li class="group/nav-item relative py-6">
+          <a href="./pricing.html" class="flex items-center gap-1.5">
+            <span
+              class="text-tagline-3 font-ibm-plex-mono leading-[21.7px] font-normal tracking-[1.68px] text-white/60 transition-colors duration-500 group-hover/nav-item:text-white"
+            >
+              Pricing
+            </span>
+          </a>
+        </li>
+      </ul>
+
+      <div class="hidden lg:block">
+        <Component
+          src="src/components/shared/button/button-primary.htm"
+          button-text="Try now"
+          href="./sign-up.html"
+          button-class="h-9 "
+          gradient-class="h-10!"
+        />
+      </div>
+
+      <button
+        type="button"
+        class="nav-hamburger flex cursor-pointer flex-col items-end justify-center space-y-2 lg:hidden"
+        aria-expanded="false"
+        aria-controls="mobile-sidebar"
+        aria-label="Open menu"
+      >
+        <span class="sr-only">Toggle menu</span>
+        <span class="bg-background-7 block h-px w-9"></span>
+        <span class="bg-background-7 block h-px w-6"></span>
+      </button>
+    </div>
+
+    <div
+      data-dropdown-root
+      class="dropdown-root pointer-events-none absolute top-full left-1/2 z-40 hidden -translate-x-1/2 pt-2 opacity-0 lg:block"
+    >
+      <div
+        data-dropdown-container
+        class="dropdown-container border-stroke-3/20 bg-background-14 relative overflow-hidden rounded-4xl border shadow-2xl"
+      >
+        <Component src="src/components/shared/header/company-menu.htm" />
+        <Component src="src/components/shared/header/inner-pages-menu.htm" />
+        <Component src="src/components/shared/header/platform-menu.htm" />
+      </div>
+    </div>
+  </nav>
+  <Component src="src/components/shared/header/mobile-menu-bar.htm" />
+</header>
