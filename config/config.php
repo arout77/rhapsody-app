@@ -75,6 +75,7 @@ return [
         // List of services that should ALWAYS be instantiated eagerly.
         'eager'   => [
             // Add any user-defined services that should not be lazy.
+            \Rhapsody\Core\Queue\QueueManager::class,
         ],
     ],
     // Payment / Omnipay settings
